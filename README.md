@@ -1,10 +1,11 @@
 # Corona
 
-A exploratry project to build a lighter, simpler Java IDE - or learn trying!
+`The'I' in IDE should also stand for "invisible"`
+
+A exploratory project to build a lighter, simpler Java IDE - or learn trying!
 
 Many IDEs try to handle many languages and a large range of features. Corona's aim is to present the most important tools and allow developer's to simply focus on writing things.
 
-In short: `The'I' in IDE should also stand for "invisible"`
 
 ## Contributing
 
