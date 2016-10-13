@@ -22,6 +22,26 @@ allprojects{
     }
 }
 
+subprojects{
+    apply plugin: 'maven'
+    
+    //All projects should provide source code and javadoc, and upload these with any released artifacts
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+    
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = "${gradleVersion}"
 }
