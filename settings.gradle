@@ -1,0 +1,3 @@
+include 'corona-ide-main'
+include 'corona-ide-core-api'
+include 'corona-ide-core'

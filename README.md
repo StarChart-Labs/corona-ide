@@ -6,6 +6,9 @@ A exploratory project to build a lighter, simpler Java IDE - or learn trying!
 
 Many IDEs try to handle many languages and a large range of features. Corona IDE's aim is to present the most important tools and allow developer's to simply focus on writing things. Most importantly, it aims to do all this in a portable manner which can be setup by a new contributor quickly and easily.
 
+## Legal
+
+All assets and code are under the [EPL 1.0 License](https://www.eclipse.org/legal/epl-v10.html) unless otherwise specified
 
 ## Contributing
 

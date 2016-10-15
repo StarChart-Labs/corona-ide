@@ -1,0 +1,2 @@
+// The API has its own version to allow more stable integration with the platform
+version = "${coronaIdeApiVersion}"

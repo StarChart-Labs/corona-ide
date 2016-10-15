@@ -7,6 +7,7 @@ allprojects{
     
     //Default all projects to a synchronized IDE version number. Certain projects, such as the API project, will override this value
     version = "${coronaIdeVersion}"
+    group = 'com.coronaide'
     
     sourceCompatibility = "${javaVersion}"
     
