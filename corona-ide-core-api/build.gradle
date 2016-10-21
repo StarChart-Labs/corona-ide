@@ -1,2 +1,8 @@
 // The API has its own version to allow more stable integration with the platform
 version = "${coronaIdeApiVersion}"
+
+dependencies {
+    compile libraries.comGoogleCodeFindbugs.jsr305
+    
+    testCompile libraries.orgTestng.testng
+}

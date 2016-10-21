@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':corona-ide-core-api')
+    compile libraries.orgSlf4j.slf4jApi
+    compile libraries.comGoogleCodeFindbugs.jsr305
+    compile libraries.comGoogleCodeGson.gson
+    
+    testCompile libraries.orgTestng.testng
+    testCompile libraries.orgMockito.mockitoCore
+    testCompile project(path: ':corona-ide-core-api', configuration: 'testSupport')
+}

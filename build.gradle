@@ -11,6 +11,7 @@ allprojects{
     
     sourceCompatibility = "${javaVersion}"
     
+    //Always download sources, to allow debugging, and use Eclipse containers for greater portability
     eclipse {
         classpath {
             downloadSources=true
@@ -21,10 +22,39 @@ allprojects{
     repositories {
         mavenCentral()
     }
+    
+    //Task which will show what the dependency set of the project is in a tree form
+    task dependencyReport(type: DependencyReportTask) {}
+    
+    //Task which will show what is introducing a particular dependency
+    task dependencyInsightReport(type: DependencyInsightReportTask) {}
 }
 
 subprojects{
     apply plugin: 'maven'
+    
+    //Configure test support sources, which can be re-used by importing projects
+    configurations {
+        testSupport
+    }
+    
+    sourceSets {
+        testSupport {
+            java {
+                srcDir 'src/test-support/java'
+            }
+            resources {
+                srcDir 'src/test-support/resources'
+            }
+            compileClasspath += sourceSets.test.compileClasspath
+            runtimeClasspath += sourceSets.test.runtimeClasspath
+        }
+    }
+    
+    task testSupportJar(type:Jar) {
+        from sourceSets.testSupport.output
+        classifier = 'test-support'
+    }
     
     //All projects should provide source code and javadoc, and upload these with any released artifacts
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -38,9 +68,35 @@ subprojects{
     }
     
     artifacts {
+        testSupport testSupportJar
+        
         archives sourcesJar
         archives javadocJar
     }
+    
+    //Setup default test behavior, including failure logging
+    test {
+        testLogging {
+            exceptionFormat 'full'
+
+            quiet {
+                events 'failed'
+            }
+            
+            info {
+                events 'skipped', 'failed', 'passed'
+            }
+            
+            debug {
+                events 'started', 'standard_out', 'standard_error', 'skipped', 'failed', 'passed'
+            }
+        }
+        
+        useTestNG() {
+            useDefaultListeners = true
+        }
+    }
+
 }
 
 task wrapper(type: Wrapper) {

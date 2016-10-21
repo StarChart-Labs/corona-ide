@@ -12,4 +12,7 @@
  *
  * @author romeara
  */
+@ParametersAreNonnullByDefault
 package com.coronaide.core;
+
+import javax.annotation.ParametersAreNonnullByDefault;
