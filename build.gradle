@@ -32,6 +32,7 @@ allprojects{
 
 subprojects{
     apply plugin: 'maven'
+    apply plugin: 'jacoco'
     
     //Configure test support sources, which can be re-used by importing projects
     configurations {
