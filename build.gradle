@@ -97,14 +97,6 @@ subprojects{
             useDefaultListeners = true
         }
     }
-    
-    //Enable jacoco coverage report
-    jacocoTestReport {
-        reports {
-            xml.enabled true
-            html.enabled false
-        }
-    }
 
 }
 

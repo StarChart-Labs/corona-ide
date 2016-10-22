@@ -8,7 +8,7 @@ before_install:
   
 script:
   - ./gradlew check
-  - ./gradlew codeCoverageReport
+  - ./gradlew codeCoverageReport --stacktrace
   
 after_success:
   - codecov
