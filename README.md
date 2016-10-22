@@ -1,6 +1,6 @@
 # Corona
 
-[![Travis CI](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)
+[![Travis CI](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)](https://travis-ci.org/Corona-IDE/corona-ide)
 
 [![Code Coverage](https://img.shields.io/codecov/c/github/Corona-IDE/corona-ide.svg)](https://codecov.io/github/Corona-IDE/corona-ide)
 
