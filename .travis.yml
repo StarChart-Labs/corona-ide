@@ -6,9 +6,5 @@ jdk:
 before_install:
   - pip install --user codecov
   
-script:
-  - ./gradlew check
-  - ./gradlew codeCoverageReport --stacktrace
-  
 after_success:
   - codecov
