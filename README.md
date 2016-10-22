@@ -1,5 +1,9 @@
 # Corona
 
+[![Travis CI](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)
+
+[![Code Coverage](https://img.shields.io/codecov/c/github/Corona-IDE/corona-ide.svg)](https://codecov.io/github/Corona-IDE/corona-ide)
+
 `The'I' in IDE should also stand for "invisible"`
 
 A exploratory project to build a lighter, simpler Java IDE - or learn trying!
