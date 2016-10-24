@@ -1,6 +1,7 @@
 allprojects{
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'jacoco'
     
     //Import library version definitions
     apply from: "${rootDir}/libraries.gradle"
@@ -32,8 +33,7 @@ allprojects{
 
 subprojects{
     apply plugin: 'maven'
-    apply plugin: 'jacoco'
-    
+
     //Configure test support sources, which can be re-used by importing projects
     configurations {
         testSupport
@@ -98,6 +98,26 @@ subprojects{
         }
     }
 
+}
+
+//Create an aggregated jacoco report
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        xml.destination "${buildDir}/reports/jacoco/report.xml"
+        html.enabled false
+        csv.enabled false
+    }
+}
+
+codeCoverageReport.dependsOn {
+    subprojects*.test
 }
     
 task wrapper(type: Wrapper) {
