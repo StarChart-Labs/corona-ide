@@ -26,6 +26,8 @@ public interface ICoreConfiguration {
      *
      * @param applicationLocation
      *            The installation location of the application
+     * @throws IllegalStateException
+     *             If the application location is set more than once
      * @since 0.1
      */
     void setLocations(Path applicationLocation);
@@ -34,12 +36,14 @@ public interface ICoreConfiguration {
      * @return The sub-path below a given element which should be considered the working directory of an element
      * @since 0.1
      */
-    Path getCoronaWorkingDirectoryName();
+    Path getWorkingDirectoryName();
 
     /**
      * @return Path to the Corona IDE working directory for the application
+     * @throws IllegalStateException
+     *             If the location where the application is installed was never initialized
      * @since 0.1
      */
-    Path getApplicationCoronaIdeDirectory();
+    Path getApplicationWorkingDirectory();
 
 }

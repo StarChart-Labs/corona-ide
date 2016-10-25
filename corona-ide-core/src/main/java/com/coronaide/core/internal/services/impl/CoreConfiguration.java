@@ -40,13 +40,17 @@ public class CoreConfiguration implements ICoreConfiguration {
     }
 
     @Override
-    public Path getCoronaWorkingDirectoryName() {
+    public Path getWorkingDirectoryName() {
         return Paths.get(".corona-ide");
     }
 
     @Override
-    public Path getApplicationCoronaIdeDirectory() {
-        return applicationLocation.resolve(getCoronaWorkingDirectoryName());
+    public Path getApplicationWorkingDirectory() {
+        if (applicationLocation == null) {
+            throw new IllegalStateException("Application location was not initialized");
+        }
+
+        return applicationLocation.resolve(getWorkingDirectoryName());
     }
 
 }

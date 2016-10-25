@@ -55,7 +55,7 @@ public class DatastoreServiceTest {
         // Create a fake corona directory
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeApplicationData");
         coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationCoronaIdeDirectory()).thenReturn(coronaDir);
+        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
 
         TestDatastore datastore = new TestDatastore();
 
@@ -69,7 +69,7 @@ public class DatastoreServiceTest {
         // Create a fake corona directory
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationDataNotStored");
         coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationCoronaIdeDirectory()).thenReturn(coronaDir);
+        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
 
         TestDatastore datastore = new TestDatastore();
 
@@ -81,7 +81,7 @@ public class DatastoreServiceTest {
         // Create a fake corona directory
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationData");
         coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationCoronaIdeDirectory()).thenReturn(coronaDir);
+        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
 
         TestDatastore datastore = new TestDatastore();
 
@@ -95,7 +95,7 @@ public class DatastoreServiceTest {
         // Create a fake corona directory
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationDataMigrate");
         coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationCoronaIdeDirectory()).thenReturn(coronaDir);
+        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
 
         TestDatastore datastore = new TestDatastore();
 
@@ -112,7 +112,7 @@ public class DatastoreServiceTest {
         // Create a fake corona directory
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".clearApplicationData");
         coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationCoronaIdeDirectory()).thenReturn(coronaDir);
+        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
 
         TestDatastore datastore = new TestDatastore();
 

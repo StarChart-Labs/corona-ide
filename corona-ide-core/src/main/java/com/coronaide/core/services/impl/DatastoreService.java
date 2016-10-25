@@ -74,7 +74,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(datastore);
         Objects.requireNonNull(data);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationCoronaIdeDirectory();
+        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
 
         try {
             store(applicationCoronaDir, module, datastore, data);
@@ -89,7 +89,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationCoronaIdeDirectory();
+        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
 
         try {
             return load(applicationCoronaDir, module, datastore);
@@ -103,7 +103,7 @@ public class DatastoreService implements IDatastoreService {
     public void clearApplicationData(Module module) throws DataStorageException {
         Objects.requireNonNull(module);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationCoronaIdeDirectory();
+        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
 
         try {
             clear(applicationCoronaDir, module);
