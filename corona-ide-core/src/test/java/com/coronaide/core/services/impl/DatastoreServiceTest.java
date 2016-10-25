@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.coronaide.core.services.impl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -25,6 +29,8 @@ import com.coronaide.core.Version;
 import com.coronaide.core.internal.services.ICoreConfiguration;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.test.core.TestDatastore;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Test basic operation of the datastore service
@@ -62,6 +68,12 @@ public class DatastoreServiceTest {
         datastoreService.storeApplicationData(module, datastore, "string");
 
         Assert.assertEquals(datastoreService.loadApplicationData(module, datastore).orElse(null), "string");
+
+        // Check that file contents are as expected
+        Path moduleDir = coreConfiguration.getApplicationWorkingDirectory().resolve(module.getId());
+
+        assertFileContents(moduleDir.resolve(datastore.getKey()), "string");
+        assertStoredVersion(moduleDir.resolve("versions.json"), datastore.getKey(), module.getVersion());
     }
 
     @Test
@@ -123,6 +135,39 @@ public class DatastoreServiceTest {
         datastoreService.clearApplicationData(module);
 
         Assert.assertFalse(datastoreService.loadApplicationData(module, datastore).isPresent());
+    }
+
+    private void assertFileContents(Path path, String expected) throws IOException {
+        StringBuilder result = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+            String line = reader.readLine();
+
+            while (line != null) {
+                if (result.length() > 0) {
+                    result.append('\n');
+                }
+
+                result.append(line);
+                line = reader.readLine();
+            }
+        }
+
+        Assert.assertEquals(result.toString(), expected);
+    }
+
+    private void assertStoredVersion(Path versionFilePath, String datastoreKey, Version expected) throws IOException {
+        try (Reader reader = new FileReader(versionFilePath.toFile())) {
+            JsonObject versions = new JsonParser().parse(reader)
+                    .getAsJsonObject();
+
+            Assert.assertTrue(versions.has(datastoreKey));
+
+            JsonObject version = versions.getAsJsonObject(datastoreKey);
+            Assert.assertEquals(version.get("major").getAsInt(), expected.getMajor());
+            Assert.assertEquals(version.get("minor").getAsInt(), expected.getMinor());
+            Assert.assertEquals(version.get("micro").getAsInt(), expected.getMicro());
+        }
     }
 
 }
