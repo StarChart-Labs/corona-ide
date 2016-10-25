@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Change log
 - Gradle build system setup
 - Basic documentation
+- Datastore APIs which allow storage and retrieval for data by modules

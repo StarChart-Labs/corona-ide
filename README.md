@@ -1,4 +1,4 @@
-# Corona
+# Corona IDE
 
 [![Travis CI](https://img.shields.io/travis/Corona-IDE/corona-ide.svg)](https://travis-ci.org/Corona-IDE/corona-ide) [![Code Coverage](https://img.shields.io/codecov/c/github/Corona-IDE/corona-ide.svg)](https://codecov.io/github/Corona-IDE/corona-ide)
 
@@ -6,7 +6,7 @@
 
 A exploratory project to build a lighter, simpler Java IDE - or learn trying!
 
-Many IDEs try to handle many languages and a large range of features. Corona IDE's aim is to present the most important tools and allow developer's to simply focus on writing things. Most importantly, it aims to do all this in a portable manner which can be setup by a new contributor quickly and easily.
+One of the harder parts of developing on a team is getting new members setup for development quickly and consistently. Corona IDE aims to provide a light-weight environment which helps developers do what they need to do, and to do it in a way which is portable and repeatable.
 
 ## Legal
 
@@ -27,7 +27,7 @@ Pull requests should include:
 
 ### Libraries Used
 
-Corona IDE is currently written against Java 1.8. Testing used the TestNG framework, and the mock testing library of choice is mockito
+Corona IDE is currently written against Java 1.8. Testing use the TestNG framework, and the mock testing library of choice is mockito
 
 
 ### Development Environment Setup
