@@ -11,3 +11,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Gradle build system setup
 - Basic documentation
 - Datastore APIs which allow storage and retrieval for data by modules
+- Application APIs which allow manipulation of IDE application instance data
