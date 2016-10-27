@@ -12,6 +12,7 @@ package com.coronaide.core.service;
 
 import java.util.Optional;
 
+import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.exception.DataStorageException;
@@ -29,6 +30,8 @@ public interface IDatastoreService {
      *
      * @param <T>
      *            The Java representation of the data to store
+     * @param application
+     *            Representation of the running Corona IDE application
      * @param module
      *            The module the data to store is associated with
      * @param datastore
@@ -40,13 +43,15 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> void storeApplicationData(Module module, Datastore<T> datastore, T data) throws DataStorageException;
+    <T> void store(Application application, Module module, Datastore<T> datastore, T data) throws DataStorageException;
 
     /**
      * Loads data from the application context for a specified module and data store
      *
      * @param <T>
      *            The Java representation of the data to store
+     * @param application
+     *            Representation of the running Corona IDE application
      * @param module
      *            The module the data to load is associated with
      * @param datastore
@@ -57,11 +62,13 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> Optional<T> loadApplicationData(Module module, Datastore<T> datastore) throws DataStorageException;
+    <T> Optional<T> load(Application application, Module module, Datastore<T> datastore) throws DataStorageException;
 
     /**
      * Clears all data associated with a module from the application context
      *
+     * @param application
+     *            Representation of the running Corona IDE application
      * @param module
      *            The module the data to clear is associated with
      * @throws DataStorageException
@@ -69,5 +76,5 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    void clearApplicationData(Module module) throws DataStorageException;
+    void clear(Application application, Module module) throws DataStorageException;
 }

@@ -25,11 +25,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
 import com.coronaide.core.exception.DataStorageException;
-import com.coronaide.core.internal.services.ICoreConfiguration;
 import com.coronaide.core.service.IDatastoreService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -48,8 +48,6 @@ public class DatastoreService implements IDatastoreService {
 
     private final String VERSION_FILE = "versions.json";
 
-    private final ICoreConfiguration coreConfiguration;
-
     private final Gson gson;
 
     private final JsonParser jsonParser;
@@ -57,27 +55,23 @@ public class DatastoreService implements IDatastoreService {
     /**
      * Creates a new data store service instance
      *
-     * @param coreConfiguration
-     *            Configuration of the core Corona IDE application
      * @since 0.1
      */
-    public DatastoreService(ICoreConfiguration coreConfiguration) {
-        this.coreConfiguration = Objects.requireNonNull(coreConfiguration);
-
+    public DatastoreService() {
         gson = new Gson();
         jsonParser = new JsonParser();
     }
 
     @Override
-    public <T> void storeApplicationData(Module module, Datastore<T> datastore, T data) throws DataStorageException {
+    public <T> void store(Application application, Module module, Datastore<T> datastore, T data)
+            throws DataStorageException {
+        Objects.requireNonNull(application);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
         Objects.requireNonNull(data);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
-
         try {
-            store(applicationCoronaDir, module, datastore, data);
+            store(application.getWorkingDirectory(), module, datastore, data);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error storing data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -85,14 +79,14 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public <T> Optional<T> loadApplicationData(Module module, Datastore<T> datastore) throws DataStorageException {
+    public <T> Optional<T> load(Application application, Module module, Datastore<T> datastore)
+            throws DataStorageException {
+        Objects.requireNonNull(application);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
-
         try {
-            return load(applicationCoronaDir, module, datastore);
+            return load(application.getWorkingDirectory(), module, datastore);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error loading data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -100,13 +94,12 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public void clearApplicationData(Module module) throws DataStorageException {
+    public void clear(Application application, Module module) throws DataStorageException {
+        Objects.requireNonNull(application);
         Objects.requireNonNull(module);
 
-        Path applicationCoronaDir = coreConfiguration.getApplicationWorkingDirectory();
-
         try {
-            clear(applicationCoronaDir, module);
+            clear(application.getWorkingDirectory(), module);
         } catch (IOException e) {
             throw new DataStorageException("Error clearing data store for module " + module.getId(), e);
         }

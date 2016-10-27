@@ -10,16 +10,18 @@
  *******************************************************************************/
 package com.coronaide.core.services.impl;
 
+import java.nio.file.Paths;
+
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
-import com.coronaide.core.internal.services.ICoreConfiguration;
 import com.coronaide.core.service.IDatastoreService;
 
 /**
@@ -30,7 +32,7 @@ import com.coronaide.core.service.IDatastoreService;
 public class DatastoreServiceErrorTest {
 
     @Mock
-    private ICoreConfiguration coreConfiguration;
+    private Application application;
 
     @Mock
     private Module module;
@@ -43,40 +45,59 @@ public class DatastoreServiceErrorTest {
     @BeforeMethod
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
         Mockito.when(module.getId()).thenReturn("com.coronaide.test");
         Mockito.when(module.getVersion()).thenReturn(new Version(1, 0, 0));
 
-        datastoreService = new DatastoreService(coreConfiguration);
+        Mockito.when(application.getVersion()).thenReturn(new Version(1, 0, 0));
+        Mockito.when(application.getWorkingDirectory()).thenReturn(Paths.get("app-dir"));
+
+        datastoreService = new DatastoreService();
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void storeApplicationNullApplication() throws Exception {
+        datastoreService.store(null, module, datastore, "data");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void storeApplicationDataNullModule() throws Exception {
-        datastoreService.storeApplicationData(null, datastore, "data");
+        datastoreService.store(application, null, datastore, "data");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void storeApplicationDataNullDatastore() throws Exception {
-        datastoreService.storeApplicationData(module, null, "data");
+        datastoreService.store(application, module, null, "data");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void storeApplicationDataNullData() throws Exception {
-        datastoreService.storeApplicationData(module, datastore, null);
+        datastoreService.store(application, module, datastore, null);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void loadApplicationDataNullApplication() throws Exception {
+        datastoreService.load(null, module, datastore);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void loadApplicationDataNullModule() throws Exception {
-        datastoreService.loadApplicationData(null, datastore);
+        datastoreService.load(application, null, datastore);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void loadApplicationDataNullDatastore() throws Exception {
-        datastoreService.loadApplicationData(module, null);
+        datastoreService.load(application, module, null);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void clearApplicationDataNullApplication() throws Exception {
+        datastoreService.clear(null, module);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void clearApplicationDataNullModule() throws Exception {
-        datastoreService.clearApplicationData(null);
+        datastoreService.clear(application, null);
     }
 
 }

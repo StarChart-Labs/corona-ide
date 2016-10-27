@@ -24,9 +24,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.Application;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
-import com.coronaide.core.internal.services.ICoreConfiguration;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.test.core.TestDatastore;
 import com.google.gson.JsonObject;
@@ -40,7 +40,7 @@ import com.google.gson.JsonParser;
 public class DatastoreServiceTest {
 
     @Mock
-    private ICoreConfiguration coreConfiguration;
+    private Application application;
 
     @Mock
     private Module module;
@@ -48,29 +48,33 @@ public class DatastoreServiceTest {
     private IDatastoreService datastoreService;
 
     @BeforeMethod
-    public void setup() {
+    public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
+
         Mockito.when(module.getId()).thenReturn("com.coronaide.test");
         Mockito.when(module.getVersion()).thenReturn(new Version(1, 0, 0));
 
-        datastoreService = new DatastoreService(coreConfiguration);
+        // Create a fake corona directory
+        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeApplicationData");
+        coronaDir.toFile().deleteOnExit();
+
+        Mockito.when(application.getVersion()).thenReturn(new Version(1, 0, 0));
+        Mockito.when(application.getWorkingDirectory()).thenReturn(coronaDir);
+
+        datastoreService = new DatastoreService();
     }
 
     @Test
     public void storeApplicationData() throws Exception {
         // Create a fake corona directory
-        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeApplicationData");
-        coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
-
         TestDatastore datastore = new TestDatastore();
 
-        datastoreService.storeApplicationData(module, datastore, "string");
+        datastoreService.store(application, module, datastore, "string");
 
-        Assert.assertEquals(datastoreService.loadApplicationData(module, datastore).orElse(null), "string");
+        Assert.assertEquals(datastoreService.load(application, module, datastore).orElse(null), "string");
 
         // Check that file contents are as expected
-        Path moduleDir = coreConfiguration.getApplicationWorkingDirectory().resolve(module.getId());
+        Path moduleDir = application.getWorkingDirectory().resolve(module.getId());
 
         assertFileContents(moduleDir.resolve(datastore.getKey()), "string");
         assertStoredVersion(moduleDir.resolve("versions.json"), datastore.getKey(), module.getVersion());
@@ -79,62 +83,46 @@ public class DatastoreServiceTest {
     @Test
     public void loadApplicationDataNotStored() throws Exception {
         // Create a fake corona directory
-        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationDataNotStored");
-        coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
-
         TestDatastore datastore = new TestDatastore();
 
-        Assert.assertFalse(datastoreService.loadApplicationData(module, datastore).isPresent());
+        Assert.assertFalse(datastoreService.load(application, module, datastore).isPresent());
     }
 
     @Test
     public void loadApplicationData() throws Exception {
         // Create a fake corona directory
-        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationData");
-        coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
-
         TestDatastore datastore = new TestDatastore();
 
-        datastoreService.storeApplicationData(module, datastore, "string");
+        datastoreService.store(application, module, datastore, "string");
 
-        Assert.assertEquals(datastoreService.loadApplicationData(module, datastore).orElse(null), "string");
+        Assert.assertEquals(datastoreService.load(application, module, datastore).orElse(null), "string");
     }
 
     @Test
     public void loadApplicationDataMigrate() throws Exception {
         // Create a fake corona directory
-        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".loadApplicationDataMigrate");
-        coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
-
         TestDatastore datastore = new TestDatastore();
 
         Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 1));
-        datastoreService.storeApplicationData(module, datastore, "string");
+        datastoreService.store(application, module, datastore, "string");
 
         Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 2));
-        Assert.assertEquals(datastoreService.loadApplicationData(module, datastore).orElse(null), "string");
+        Assert.assertEquals(datastoreService.load(application, module, datastore).orElse(null), "string");
         Assert.assertTrue(datastore.isMigrateCalled());
     }
 
     @Test
     public void clearApplicationData() throws Exception {
         // Create a fake corona directory
-        Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".clearApplicationData");
-        coronaDir.toFile().deleteOnExit();
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(coronaDir);
-
         TestDatastore datastore = new TestDatastore();
 
-        datastoreService.storeApplicationData(module, datastore, "string");
+        datastoreService.store(application, module, datastore, "string");
 
-        Assert.assertEquals(datastoreService.loadApplicationData(module, datastore).orElse(null), "string");
+        Assert.assertEquals(datastoreService.load(application, module, datastore).orElse(null), "string");
 
-        datastoreService.clearApplicationData(module);
+        datastoreService.clear(application, module);
 
-        Assert.assertFalse(datastoreService.loadApplicationData(module, datastore).isPresent());
+        Assert.assertFalse(datastoreService.load(application, module, datastore).isPresent());
     }
 
     private void assertFileContents(Path path, String expected) throws IOException {
