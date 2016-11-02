@@ -82,4 +82,14 @@ public class CoronaIdeApplicationTest {
         Assert.assertTrue(app1.equals(app2));
     }
 
+    @Test
+    public void toStringTest() throws Exception {
+        CoronaIdeApplication app = new CoronaIdeApplication(Paths.get("path"));
+
+        String result = app.toString();
+
+        Assert.assertTrue(result.contains("version="));
+        Assert.assertTrue(result.contains("workingDirectory=path"));
+    }
+
 }

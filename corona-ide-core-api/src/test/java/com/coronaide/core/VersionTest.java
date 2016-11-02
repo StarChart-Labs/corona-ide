@@ -59,7 +59,23 @@ public class VersionTest {
     }
 
     @Test
-    public void equalsDifferentData() throws Exception {
+    public void equalsDifferentMajor() throws Exception {
+        Version version1 = new Version(1, 2, 3);
+        Version version2 = new Version(4, 2, 3);
+
+        Assert.assertFalse(version1.equals(version2));
+    }
+
+    @Test
+    public void equalsDifferentMinor() throws Exception {
+        Version version1 = new Version(1, 2, 3);
+        Version version2 = new Version(1, 4, 3);
+
+        Assert.assertFalse(version1.equals(version2));
+    }
+
+    @Test
+    public void equalsDifferentMicro() throws Exception {
         Version version1 = new Version(1, 2, 3);
         Version version2 = new Version(1, 2, 4);
 
@@ -72,6 +88,13 @@ public class VersionTest {
         Version version2 = new Version(1, 2, 3);
 
         Assert.assertTrue(version1.equals(version2));
+    }
+
+    @Test
+    public void toStringTest() throws Exception {
+        Version version = new Version(1, 2, 3);
+
+        Assert.assertEquals(version.toString(), "1.2.3");
     }
 
 }
