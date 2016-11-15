@@ -8,7 +8,7 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  *******************************************************************************/
-package com.coronaide.core.impl;
+package com.coronaide.core;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,22 +16,24 @@ import java.nio.file.Paths;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.Application;
+
 /**
  * Tests basic operations of the Corona IDE Application representation
  *
  * @author romeara
  */
-public class CoronaIdeApplicationTest {
+public class ApplicationTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullPath() throws Exception {
-        new CoronaIdeApplication(null);
+        new Application(null);
     }
 
     @Test
     public void getTest() throws Exception {
         Path workingDir = Paths.get("path");
-        CoronaIdeApplication result = new CoronaIdeApplication(workingDir);
+        Application result = new Application(workingDir);
 
         Assert.assertNotNull(result.getVersion());
         Assert.assertEquals(result.getWorkingDirectory().toString(), workingDir.toString());
@@ -39,52 +41,52 @@ public class CoronaIdeApplicationTest {
 
     @Test
     public void hashCodeEqualWhenDataEqual() throws Exception {
-        CoronaIdeApplication app1 = new CoronaIdeApplication(Paths.get("path"));
-        CoronaIdeApplication app2 = new CoronaIdeApplication(Paths.get("path"));
+        Application app1 = new Application(Paths.get("path"));
+        Application app2 = new Application(Paths.get("path"));
 
         Assert.assertEquals(app1.hashCode(), app2.hashCode());
     }
 
     @Test
     public void equalsNull() throws Exception {
-        CoronaIdeApplication app = new CoronaIdeApplication(Paths.get("path"));
+        Application app = new Application(Paths.get("path"));
 
         Assert.assertFalse(app.equals(null));
     }
 
     @Test
     public void equalsDifferentClass() throws Exception {
-        CoronaIdeApplication app = new CoronaIdeApplication(Paths.get("path"));
+        Application app = new Application(Paths.get("path"));
 
         Assert.assertFalse(app.equals("string"));
     }
 
     @Test
     public void equalsSelf() throws Exception {
-        CoronaIdeApplication app = new CoronaIdeApplication(Paths.get("path"));
+        Application app = new Application(Paths.get("path"));
 
         Assert.assertTrue(app.equals(app));
     }
 
     @Test
     public void equalsDifferentData() throws Exception {
-        CoronaIdeApplication app1 = new CoronaIdeApplication(Paths.get("path1"));
-        CoronaIdeApplication app2 = new CoronaIdeApplication(Paths.get("path2"));
+        Application app1 = new Application(Paths.get("path1"));
+        Application app2 = new Application(Paths.get("path2"));
 
         Assert.assertFalse(app1.equals(app2));
     }
 
     @Test
     public void equalsSameData() throws Exception {
-        CoronaIdeApplication app1 = new CoronaIdeApplication(Paths.get("path"));
-        CoronaIdeApplication app2 = new CoronaIdeApplication(Paths.get("path"));
+        Application app1 = new Application(Paths.get("path"));
+        Application app2 = new Application(Paths.get("path"));
 
         Assert.assertTrue(app1.equals(app2));
     }
 
     @Test
     public void toStringTest() throws Exception {
-        CoronaIdeApplication app = new CoronaIdeApplication(Paths.get("path"));
+        Application app = new Application(Paths.get("path"));
 
         String result = app.toString();
 

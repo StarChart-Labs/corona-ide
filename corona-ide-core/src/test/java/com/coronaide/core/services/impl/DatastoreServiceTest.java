@@ -40,10 +40,9 @@ import com.google.gson.JsonParser;
 public class DatastoreServiceTest {
 
     @Mock
-    private Application application;
-
-    @Mock
     private Module module;
+
+    private Application application;
 
     private IDatastoreService datastoreService;
 
@@ -58,8 +57,7 @@ public class DatastoreServiceTest {
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeApplicationData");
         coronaDir.toFile().deleteOnExit();
 
-        Mockito.when(application.getVersion()).thenReturn(new Version(1, 0, 0));
-        Mockito.when(application.getWorkingDirectory()).thenReturn(coronaDir);
+        application = new Application(coronaDir);
 
         datastoreService = new DatastoreService();
     }

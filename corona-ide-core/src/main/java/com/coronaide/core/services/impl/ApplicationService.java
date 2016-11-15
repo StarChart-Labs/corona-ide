@@ -13,7 +13,6 @@ package com.coronaide.core.services.impl;
 import java.util.Objects;
 
 import com.coronaide.core.Application;
-import com.coronaide.core.impl.CoronaIdeApplication;
 import com.coronaide.core.internal.services.ICoreConfiguration;
 import com.coronaide.core.service.IApplicationService;
 
@@ -38,7 +37,7 @@ public class ApplicationService implements IApplicationService {
     public ApplicationService(ICoreConfiguration coreConfiguration) {
         Objects.requireNonNull(coreConfiguration);
 
-        coronaIdeApplication = new CoronaIdeApplication(coreConfiguration.getApplicationWorkingDirectory());
+        coronaIdeApplication = new Application(coreConfiguration.getApplicationWorkingDirectory());
     }
 
     @Override

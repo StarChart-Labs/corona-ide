@@ -32,13 +32,12 @@ import com.coronaide.core.service.IDatastoreService;
 public class DatastoreServiceErrorTest {
 
     @Mock
-    private Application application;
-
-    @Mock
     private Module module;
 
     @Mock
     private Datastore<String> datastore;
+
+    private Application application;
 
     private IDatastoreService datastoreService;
 
@@ -49,8 +48,7 @@ public class DatastoreServiceErrorTest {
         Mockito.when(module.getId()).thenReturn("com.coronaide.test");
         Mockito.when(module.getVersion()).thenReturn(new Version(1, 0, 0));
 
-        Mockito.when(application.getVersion()).thenReturn(new Version(1, 0, 0));
-        Mockito.when(application.getWorkingDirectory()).thenReturn(Paths.get("app-dir"));
+        application = new Application(Paths.get("app-dir"));
 
         datastoreService = new DatastoreService();
     }
