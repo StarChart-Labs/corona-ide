@@ -25,10 +25,12 @@ public class CoreConfigurationTest {
 
     private Path applicationDir = Paths.get("applicationDir");
 
+    private Path workspaceDir = Paths.get("workspaceDir");
+
     private CoreConfiguration coreConfiguration = new CoreConfiguration();
 
     public CoreConfigurationTest() {
-        coreConfiguration.setLocations(applicationDir);
+        coreConfiguration.setLocations(applicationDir, workspaceDir);
     }
 
     @Test
@@ -44,6 +46,13 @@ public class CoreConfigurationTest {
         Path applicationDirectory = coreConfiguration.getApplicationWorkingDirectory();
 
         Assert.assertEquals(applicationDirectory.toString(), applicationDir.resolve(workingDirectoryName).toString());
+    }
+
+    @Test
+    public void getActiveWorkspaceDirectory() throws Exception {
+        Path workspaceDirectory = coreConfiguration.getActiveWorkspaceDirectory();
+
+        Assert.assertEquals(workspaceDirectory.toString(), workspaceDir.toString());
     }
 
 }

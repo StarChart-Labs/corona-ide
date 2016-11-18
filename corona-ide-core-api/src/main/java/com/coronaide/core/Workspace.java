@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) Oct 24, 2016 Corona IDE.
+ * Copyright (c) Nov 17, 2016 Corona IDE.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,44 +16,35 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.coronaide.core.service.IApplicationService;
+import com.coronaide.core.service.IWorkspaceService;
 
 /**
- * Represents the Corona IDE application instance currently running.
+ * Represents a workspace within Corona IDE. A workspace is a unit of settings, modules, and configuration which forms a
+ * customized environment for development
  *
  * <p>
  * Clients are not intended to create instances of this class - retrieve the application instance from the
- * {@link IApplicationService} instance
+ * {@link IWorkspaceService} instance
  *
  * @author romeara
  * @since 0.1
  */
 @Immutable
-public final class Application {
-
-    private static Version VERSION = new Version(0, 0, 1);
+public final class Workspace {
 
     private final Path workingDirectory;
 
     /**
      * @param workingDirectory
-     *            Directory all application generated/managed files should be placed within
+     *            Directory all application generated/managed files for the workspace should be placed within
      * @since 0.1
      */
-    public Application(Path workingDirectory) {
+    public Workspace(Path workingDirectory) {
         this.workingDirectory = Objects.requireNonNull(workingDirectory);
     }
 
     /**
-     * @return The current running version of the application
-     * @since 0.1
-     */
-    public Version getVersion() {
-        return VERSION;
-    }
-
-    /**
-     * @return Directory where all files managed by the Corona IDE application are located
+     * @return Directory where all files managed by the Corona IDE application for the workspace are located
      * @since 0.1
      */
     public Path getWorkingDirectory() {
@@ -62,18 +53,17 @@ public final class Application {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getVersion(), getWorkingDirectory());
+        return Objects.hash(getWorkingDirectory());
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         boolean result = false;
 
-        if (obj instanceof Application) {
-            Application compare = (Application) obj;
+        if (obj instanceof Workspace) {
+            Workspace compare = (Workspace) obj;
 
-            result = Objects.equals(compare.getVersion(), getVersion())
-                    && Objects.equals(compare.getWorkingDirectory(), getWorkingDirectory());
+            result = Objects.equals(compare.getWorkingDirectory(), getWorkingDirectory());
         }
 
         return result;
@@ -82,9 +72,7 @@ public final class Application {
     @Override
     public String toString() {
         return new StringBuilder().append(getClass().getSimpleName()).append('{')
-                .append("version").append('=').append(getVersion()).append(',')
                 .append("workingDirectory").append('=').append(getWorkingDirectory())
                 .append('}').toString();
     }
-
 }

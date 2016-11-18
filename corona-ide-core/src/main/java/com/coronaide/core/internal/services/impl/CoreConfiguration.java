@@ -27,16 +27,20 @@ public class CoreConfiguration implements ICoreConfiguration {
 
     private Path applicationLocation;
 
+    private Path workspaceLocation;
+
     @Override
-    public void setLocations(Path applicationLocation) {
+    public void setLocations(Path applicationLocation, Path workspaceLocation) {
         Objects.requireNonNull(applicationLocation);
+        Objects.requireNonNull(workspaceLocation);
 
         if (this.applicationLocation != null) {
             throw new IllegalStateException(
-                    "Application location has already been set - additional calls are not permitted");
+                    "Application locations have already been set - additional calls are not permitted");
         }
 
         this.applicationLocation = applicationLocation;
+        this.workspaceLocation = workspaceLocation;
     }
 
     @Override
@@ -51,6 +55,15 @@ public class CoreConfiguration implements ICoreConfiguration {
         }
 
         return applicationLocation.resolve(getWorkingDirectoryName());
+    }
+
+    @Override
+    public Path getActiveWorkspaceDirectory() {
+        if (workspaceLocation == null) {
+            throw new IllegalStateException("Workspace location was not initialized");
+        }
+
+        return workspaceLocation;
     }
 
 }

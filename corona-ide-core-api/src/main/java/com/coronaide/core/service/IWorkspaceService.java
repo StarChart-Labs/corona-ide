@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) Oct 24, 2016 Corona IDE.
+ * Copyright (c) Nov 17, 2016 Corona IDE.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,21 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  *******************************************************************************/
+package com.coronaide.core.service;
+
+import com.coronaide.core.Workspace;
+
 /**
- * Implementations of representations defined in the core APIs
+ * Allows retrieval of development environment information
  *
  * @author romeara
+ * @since 0.1
  */
-@ParametersAreNonnullByDefault
-package com.coronaide.core.impl;
+public interface IWorkspaceService {
 
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * @return A representation of the workspace the application is currently using as its development environment
+     * @since 0.1
+     */
+    Workspace getActiveWorkspace();
+}

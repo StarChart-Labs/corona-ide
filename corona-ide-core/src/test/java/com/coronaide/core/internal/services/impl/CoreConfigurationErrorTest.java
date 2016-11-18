@@ -25,8 +25,8 @@ public class CoreConfigurationErrorTest {
     public void setLocationMultipleTimes() throws Exception {
         CoreConfiguration configuration = new CoreConfiguration();
 
-        configuration.setLocations(Paths.get("first"));
-        configuration.setLocations(Paths.get("second"));
+        configuration.setLocations(Paths.get("first"), Paths.get("first"));
+        configuration.setLocations(Paths.get("second"), Paths.get("second"));
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -34,6 +34,13 @@ public class CoreConfigurationErrorTest {
         CoreConfiguration configuration = new CoreConfiguration();
 
         configuration.getApplicationWorkingDirectory();
+    }
+
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void getWorksapceDirectoryBeforeInitialization() throws Exception {
+        CoreConfiguration configuration = new CoreConfiguration();
+
+        configuration.getActiveWorkspaceDirectory();
     }
 
 }

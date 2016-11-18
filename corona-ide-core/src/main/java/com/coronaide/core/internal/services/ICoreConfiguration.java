@@ -26,11 +26,13 @@ public interface ICoreConfiguration {
      *
      * @param applicationLocation
      *            The installation location of the application
+     * @param workspaceLocation
+     *            The location of the active workspace
      * @throws IllegalStateException
      *             If the application location is set more than once
      * @since 0.1
      */
-    void setLocations(Path applicationLocation);
+    void setLocations(Path applicationLocation, Path workspaceLocation);
 
     /**
      * @return The sub-path below a given element which should be considered the working directory of an element
@@ -45,5 +47,13 @@ public interface ICoreConfiguration {
      * @since 0.1
      */
     Path getApplicationWorkingDirectory();
+
+    /**
+     * @return Path to the directory where the currently active workspace is located
+     * @throws IllegalStateException
+     *             If the location where the workspace is located was never initialized
+     * @since 0.1
+     */
+    Path getActiveWorkspaceDirectory();
 
 }
