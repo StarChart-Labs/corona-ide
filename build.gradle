@@ -1,3 +1,22 @@
+plugins {
+  id 'org.sonarqube' version '2.2'
+}
+
+sonarqube {
+    properties {
+        property 'sonar.projectName', 'Corona IDE'
+        property 'sonar.projectKey', 'com.coronaide:coronaide'
+        property 'sonar.junit.reportsPath', file("${buildDir}/test-results")
+        property 'sonar.core.codeCoveragePlugin', 'jacoco'
+        property 'sonar.jacoco.reportPath', "${buildDir}/jacoco/test.exec"
+        property 'sonar.host.url', 'https://sonarqube.com'
+    }
+}
+
+if (project.hasProperty('sonarLogin')) {
+    System.setProperty('sonar.login', "${sonarLogin}")
+}
+
 allprojects{
     apply plugin: 'java'
     apply plugin: 'eclipse'
@@ -11,7 +30,7 @@ allprojects{
     group = 'com.coronaide'
     
     sourceCompatibility = "${javaVersion}"
-    
+
     //Always download sources, to allow debugging, and use Eclipse containers for greater portability
     eclipse {
         classpath {
@@ -29,6 +48,7 @@ allprojects{
     
     //Task which will show what is introducing a particular dependency
     task dependencyInsightReport(type: DependencyInsightReportTask) {}
+
 }
 
 subprojects{
@@ -95,6 +115,16 @@ subprojects{
         
         useTestNG() {
             useDefaultListeners = true
+        }
+    }
+    
+    sonarqube {
+        properties {
+            property 'sonar.projectKey', "com.coronaide:${project.name}"
+            property 'sonar.junit.reportsPath', file("${buildDir}/test-results")
+            property 'sonar.core.codeCoveragePlugin', 'jacoco'
+            property 'sonar.jacoco.reportPath', "${buildDir}/jacoco/test.exec"
+            properties['sonar.sources'] = sourceSets.main.java.srcDirs.findAll { it.exists() && !it.path.contains('resources') } ?: []
         }
     }
 
