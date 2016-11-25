@@ -15,6 +15,7 @@ import java.util.Optional;
 import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
+import com.coronaide.core.Workspace;
 import com.coronaide.core.exception.DataStorageException;
 
 /**
@@ -77,4 +78,57 @@ public interface IDatastoreService {
      * @since 0.1
      */
     void clear(Application application, Module module) throws DataStorageException;
+
+    /**
+     * Stores data in the workspace context for a specified module and data store
+     *
+     * @param <T>
+     *            The Java representation of the data to store
+     * @param workspace
+     *            Representation of the active Corona IDE workspace
+     * @param module
+     *            The module the data to store is associated with
+     * @param datastore
+     *            Data store specifying how to store the desired data
+     * @param data
+     *            A representation of the data to store
+     * @throws DataStorageException
+     *             If there is a system I/O error storing the data. Runtime exception, as this is not an expected
+     *             occurrence and indicates base program assumptions have been violated
+     * @since 0.1
+     */
+    <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data) throws DataStorageException;
+
+    /**
+     * Loads data from the workspace context for a specified module and data store
+     *
+     * @param <T>
+     *            The Java representation of the data to store
+     * @param workspace
+     *            Representation of the active Corona IDE workspace
+     * @param module
+     *            The module the data to load is associated with
+     * @param datastore
+     *            Data store specifying how to load the desired data
+     * @return A type representation of the loaded data, or an empty optional if no data was found to load
+     * @throws DataStorageException
+     *             If there is a system I/O error loading the data. Runtime exception, as this is not an expected
+     *             occurrence and indicates base program assumptions have been violated
+     * @since 0.1
+     */
+    <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore) throws DataStorageException;
+
+    /**
+     * Clears all data associated with a module from the workspace context
+     *
+     * @param workspace
+     *            Representation of the active Corona IDE workspace
+     * @param module
+     *            The module the data to clear is associated with
+     * @throws DataStorageException
+     *             If there is a system I/O error clearing the data. Runtime exception, as this is not an expected
+     *             occurrence and indicates base program assumptions have been violated
+     * @since 0.1
+     */
+    void clear(Workspace workspace, Module module) throws DataStorageException;
 }

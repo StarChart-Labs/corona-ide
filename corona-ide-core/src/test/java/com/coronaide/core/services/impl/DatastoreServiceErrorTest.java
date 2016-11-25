@@ -22,6 +22,7 @@ import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
+import com.coronaide.core.Workspace;
 import com.coronaide.core.service.IDatastoreService;
 
 /**
@@ -39,6 +40,8 @@ public class DatastoreServiceErrorTest {
 
     private Application application;
 
+    private Workspace workspace;
+
     private IDatastoreService datastoreService;
 
     @BeforeMethod
@@ -49,13 +52,14 @@ public class DatastoreServiceErrorTest {
         Mockito.when(module.getVersion()).thenReturn(new Version(1, 0, 0));
 
         application = new Application(Paths.get("app-dir"));
+        workspace = new Workspace(Paths.get("workspace-dir"));
 
         datastoreService = new DatastoreService();
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void storeApplicationNullApplication() throws Exception {
-        datastoreService.store(null, module, datastore, "data");
+        datastoreService.store((Application) null, module, datastore, "data");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -75,7 +79,7 @@ public class DatastoreServiceErrorTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void loadApplicationDataNullApplication() throws Exception {
-        datastoreService.load(null, module, datastore);
+        datastoreService.load((Application) null, module, datastore);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -90,12 +94,57 @@ public class DatastoreServiceErrorTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void clearApplicationDataNullApplication() throws Exception {
-        datastoreService.clear(null, module);
+        datastoreService.clear((Application) null, module);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void clearApplicationDataNullModule() throws Exception {
         datastoreService.clear(application, null);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void storeWorkspaceNullWorkspace() throws Exception {
+        datastoreService.store((Workspace) null, module, datastore, "data");
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void storeWorkspaceDataNullModule() throws Exception {
+        datastoreService.store(workspace, null, datastore, "data");
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void storeWorkspaceDataNullDatastore() throws Exception {
+        datastoreService.store(workspace, module, null, "data");
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void storeWorkspaceDataNullData() throws Exception {
+        datastoreService.store(workspace, module, datastore, null);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void loadWorkspaceDataNullWorkspace() throws Exception {
+        datastoreService.load((Workspace) null, module, datastore);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void loadWorkspaceDataNullModule() throws Exception {
+        datastoreService.load(workspace, null, datastore);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void loadWorkspaceDataNullDatastore() throws Exception {
+        datastoreService.load(workspace, module, null);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void clearWorkspaceDataNullWorkspace() throws Exception {
+        datastoreService.clear((Workspace) null, module);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void clearWorkspaceDataNullModule() throws Exception {
+        datastoreService.clear(workspace, null);
     }
 
 }

@@ -29,6 +29,7 @@ import com.coronaide.core.Application;
 import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
+import com.coronaide.core.Workspace;
 import com.coronaide.core.exception.DataStorageException;
 import com.coronaide.core.service.IDatastoreService;
 import com.google.gson.Gson;
@@ -100,6 +101,49 @@ public class DatastoreService implements IDatastoreService {
 
         try {
             clear(application.getWorkingDirectory(), module);
+        } catch (IOException e) {
+            throw new DataStorageException("Error clearing data store for module " + module.getId(), e);
+        }
+    }
+
+    @Override
+    public <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data)
+            throws DataStorageException {
+        Objects.requireNonNull(workspace);
+        Objects.requireNonNull(module);
+        Objects.requireNonNull(datastore);
+        Objects.requireNonNull(data);
+
+        try {
+            store(workspace.getWorkingDirectory(), module, datastore, data);
+        } catch (IOException e) {
+            throw new DataStorageException(
+                    "Error storing data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
+        }
+    }
+
+    @Override
+    public <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore)
+            throws DataStorageException {
+        Objects.requireNonNull(workspace);
+        Objects.requireNonNull(module);
+        Objects.requireNonNull(datastore);
+
+        try {
+            return load(workspace.getWorkingDirectory(), module, datastore);
+        } catch (IOException e) {
+            throw new DataStorageException(
+                    "Error loading data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
+        }
+    }
+
+    @Override
+    public void clear(Workspace workspace, Module module) throws DataStorageException {
+        Objects.requireNonNull(workspace);
+        Objects.requireNonNull(module);
+
+        try {
+            clear(workspace.getWorkingDirectory(), module);
         } catch (IOException e) {
             throw new DataStorageException("Error clearing data store for module " + module.getId(), e);
         }

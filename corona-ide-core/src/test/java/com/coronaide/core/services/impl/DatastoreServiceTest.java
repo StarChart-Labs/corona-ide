@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import com.coronaide.core.Application;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
+import com.coronaide.core.Workspace;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.test.core.TestDatastore;
 import com.google.gson.JsonObject;
@@ -44,6 +45,8 @@ public class DatastoreServiceTest {
 
     private Application application;
 
+    private Workspace workspace;
+
     private IDatastoreService datastoreService;
 
     @BeforeMethod
@@ -57,7 +60,12 @@ public class DatastoreServiceTest {
         Path coronaDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeApplicationData");
         coronaDir.toFile().deleteOnExit();
 
+        // Create fake workspace directory
+        Path workspaceDir = Files.createTempDirectory(getClass().getSimpleName() + ".storeWorkspaceData");
+        workspaceDir.toFile().deleteOnExit();
+
         application = new Application(coronaDir);
+        workspace = new Workspace(workspaceDir);
 
         datastoreService = new DatastoreService();
     }
@@ -121,6 +129,67 @@ public class DatastoreServiceTest {
         datastoreService.clear(application, module);
 
         Assert.assertFalse(datastoreService.load(application, module, datastore).isPresent());
+    }
+
+    @Test
+    public void storeWorkspaceData() throws Exception {
+        // Create a fake corona directory
+        TestDatastore datastore = new TestDatastore();
+
+        datastoreService.store(workspace, module, datastore, "string");
+
+        Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
+
+        // Check that file contents are as expected
+        Path moduleDir = workspace.getWorkingDirectory().resolve(module.getId());
+
+        assertFileContents(moduleDir.resolve(datastore.getKey()), "string");
+        assertStoredVersion(moduleDir.resolve("versions.json"), datastore.getKey(), module.getVersion());
+    }
+
+    @Test
+    public void loadWorkspaceDataNotStored() throws Exception {
+        // Create a fake corona directory
+        TestDatastore datastore = new TestDatastore();
+
+        Assert.assertFalse(datastoreService.load(workspace, module, datastore).isPresent());
+    }
+
+    @Test
+    public void loadWorkspaceData() throws Exception {
+        // Create a fake corona directory
+        TestDatastore datastore = new TestDatastore();
+
+        datastoreService.store(workspace, module, datastore, "string");
+
+        Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
+    }
+
+    @Test
+    public void loadWorkspaceDataMigrate() throws Exception {
+        // Create a fake corona directory
+        TestDatastore datastore = new TestDatastore();
+
+        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 1));
+        datastoreService.store(workspace, module, datastore, "string");
+
+        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 2));
+        Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
+        Assert.assertTrue(datastore.isMigrateCalled());
+    }
+
+    @Test
+    public void clearWorkspaceData() throws Exception {
+        // Create a fake corona directory
+        TestDatastore datastore = new TestDatastore();
+
+        datastoreService.store(workspace, module, datastore, "string");
+
+        Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
+
+        datastoreService.clear(workspace, module);
+
+        Assert.assertFalse(datastoreService.load(workspace, module, datastore).isPresent());
     }
 
     private void assertFileContents(Path path, String expected) throws IOException {
