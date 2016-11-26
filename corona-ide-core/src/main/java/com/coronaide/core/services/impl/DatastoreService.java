@@ -207,8 +207,8 @@ public class DatastoreService implements IDatastoreService {
 
         File datastoreFile = moduleDirectory.resolve(datastore.getKey()).toFile();
 
-        if (!datastoreFile.exists()) {
-            datastoreFile.createNewFile();
+        if (!datastoreFile.exists() && !datastoreFile.createNewFile()) {
+            throw new IOException("Failed to create datastore file (" + datastoreFile.toPath().toString() + ")");
         }
 
         if (data != null) {
@@ -314,13 +314,17 @@ public class DatastoreService implements IDatastoreService {
         File versionFile = moduleDirectory.resolve(VERSION_FILE).toFile();
         JsonObject allVersions = null;
 
-        if (!versionFile.exists()) {
-            versionFile.createNewFile();
-            allVersions = new JsonObject();
-        } else {
-            // Load the Json
+        // Load the JSON if it exists, otherwise initialize the representation
+        if (versionFile.exists()) {
             try (Reader reader = new BufferedReader(new FileReader(versionFile))) {
                 allVersions = jsonParser.parse(reader).getAsJsonObject();
+            }
+        } else {
+            if (versionFile.createNewFile()) {
+                allVersions = new JsonObject();
+            } else {
+                throw new IOException(
+                        "Failed to create datastore version file (" + versionFile.toPath().toString() + ")");
             }
         }
 
@@ -329,10 +333,8 @@ public class DatastoreService implements IDatastoreService {
         allVersions.add(datastoreKey, newVersion);
 
         // Write out to file
-        if (allVersions != null) {
-            try (JsonWriter writer = gson.newJsonWriter((new FileWriter(versionFile, false)))) {
-                gson.toJson(allVersions, writer);
-            }
+        try (JsonWriter writer = gson.newJsonWriter((new FileWriter(versionFile, false)))) {
+            gson.toJson(allVersions, writer);
         }
     }
 
