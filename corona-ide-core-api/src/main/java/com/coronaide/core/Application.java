@@ -31,7 +31,7 @@ import com.coronaide.core.service.IApplicationService;
 @Immutable
 public final class Application {
 
-    private static Version VERSION = new Version(0, 0, 1);
+    private static final Version VERSION = new Version(0, 0, 1);
 
     private final Path workingDirectory;
 

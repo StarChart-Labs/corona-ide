@@ -47,7 +47,7 @@ import com.google.gson.stream.JsonWriter;
  */
 public class DatastoreService implements IDatastoreService {
 
-    private final String VERSION_FILE = "versions.json";
+    private static final String VERSION_FILE = "versions.json";
 
     private final Gson gson;
 
@@ -64,8 +64,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public <T> void store(Application application, Module module, Datastore<T> datastore, T data)
-            throws DataStorageException {
+    public <T> void store(Application application, Module module, Datastore<T> datastore, T data) {
         Objects.requireNonNull(application);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
@@ -80,8 +79,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public <T> Optional<T> load(Application application, Module module, Datastore<T> datastore)
-            throws DataStorageException {
+    public <T> Optional<T> load(Application application, Module module, Datastore<T> datastore) {
         Objects.requireNonNull(application);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
@@ -95,7 +93,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public void clear(Application application, Module module) throws DataStorageException {
+    public void clear(Application application, Module module) {
         Objects.requireNonNull(application);
         Objects.requireNonNull(module);
 
@@ -107,8 +105,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data)
-            throws DataStorageException {
+    public <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data) {
         Objects.requireNonNull(workspace);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
@@ -123,8 +120,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore)
-            throws DataStorageException {
+    public <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore) {
         Objects.requireNonNull(workspace);
         Objects.requireNonNull(module);
         Objects.requireNonNull(datastore);
@@ -138,7 +134,7 @@ public class DatastoreService implements IDatastoreService {
     }
 
     @Override
-    public void clear(Workspace workspace, Module module) throws DataStorageException {
+    public void clear(Workspace workspace, Module module) {
         Objects.requireNonNull(workspace);
         Objects.requireNonNull(module);
 
@@ -333,7 +329,7 @@ public class DatastoreService implements IDatastoreService {
         allVersions.add(datastoreKey, newVersion);
 
         // Write out to file
-        try (JsonWriter writer = gson.newJsonWriter((new FileWriter(versionFile, false)))) {
+        try (JsonWriter writer = gson.newJsonWriter(new FileWriter(versionFile, false))) {
             gson.toJson(allVersions, writer);
         }
     }

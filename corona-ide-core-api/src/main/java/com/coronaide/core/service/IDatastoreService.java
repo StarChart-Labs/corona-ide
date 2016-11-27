@@ -44,7 +44,7 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> void store(Application application, Module module, Datastore<T> datastore, T data) throws DataStorageException;
+    <T> void store(Application application, Module module, Datastore<T> datastore, T data);
 
     /**
      * Loads data from the application context for a specified module and data store
@@ -63,7 +63,7 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> Optional<T> load(Application application, Module module, Datastore<T> datastore) throws DataStorageException;
+    <T> Optional<T> load(Application application, Module module, Datastore<T> datastore);
 
     /**
      * Clears all data associated with a module from the application context
@@ -77,7 +77,7 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    void clear(Application application, Module module) throws DataStorageException;
+    void clear(Application application, Module module);
 
     /**
      * Stores data in the workspace context for a specified module and data store
@@ -97,7 +97,7 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data) throws DataStorageException;
+    <T> void store(Workspace workspace, Module module, Datastore<T> datastore, T data);
 
     /**
      * Loads data from the workspace context for a specified module and data store
@@ -116,7 +116,7 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore) throws DataStorageException;
+    <T> Optional<T> load(Workspace workspace, Module module, Datastore<T> datastore);
 
     /**
      * Clears all data associated with a module from the workspace context
@@ -130,5 +130,5 @@ public interface IDatastoreService {
      *             occurrence and indicates base program assumptions have been violated
      * @since 0.1
      */
-    void clear(Workspace workspace, Module module) throws DataStorageException;
+    void clear(Workspace workspace, Module module);
 }
