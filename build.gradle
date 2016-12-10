@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'com.netflix.nebula:nebula-dependency-recommender:3.6.3'
+    }
+}
+
 plugins {
   id 'org.sonarqube' version '2.2'
 }
@@ -21,9 +32,11 @@ allprojects{
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'jacoco'
+    apply plugin: 'nebula.dependency-recommender'
     
-    //Import library version definitions
-    apply from: "${rootDir}/libraries.gradle"
+    dependencyRecommendations {
+        dependencyLock file: file("$rootDir/dependencies.lock")
+    }
     
     //Default all projects to a synchronized IDE version number. Certain projects, such as the API project, will override this value
     version = "${coronaIdeVersion}"
@@ -53,6 +66,8 @@ allprojects{
 
 subprojects{
     apply plugin: 'maven'
+    //apply plugin: 'nebula.source-jar'
+    //apply plugin: 'nebula.javadoc-jar'
 
     //Configure test support sources, which can be re-used by importing projects
     configurations {

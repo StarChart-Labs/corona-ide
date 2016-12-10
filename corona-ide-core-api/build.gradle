@@ -1,8 +1,9 @@
 // The API has its own version to allow more stable integration with the platform
 version = "${coronaIdeApiVersion}"
 
+//Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
-    compile libraries.comGoogleCodeFindbugs.jsr305
+    compile group: 'com.google.code.findbugs', name: 'jsr305'
     
-    testCompile libraries.orgTestng.testng
+    testCompile group: 'org.testng', name: 'testng'
 }

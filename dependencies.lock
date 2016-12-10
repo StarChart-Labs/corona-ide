@@ -1,0 +1,11 @@
+{
+	"com.google.code.findbugs:jsr305": { "locked": "3.0.1" },
+	
+	"com.google.code.gson:gson": { "locked": "2.7" },
+	
+	"org.mockito:mockito-core": { "locked": "2.2.5" },
+	
+	"org.slf4j:slf4j-api": { "locked": "1.7.21" },
+	
+	"org.testng:testng": { "locked": "6.9.10" },
+}

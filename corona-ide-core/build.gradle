@@ -1,10 +1,11 @@
+//Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
     compile project(':corona-ide-core-api')
-    compile libraries.orgSlf4j.slf4jApi
-    compile libraries.comGoogleCodeFindbugs.jsr305
-    compile libraries.comGoogleCodeGson.gson
+    compile group: 'org.slf4j', name: 'slf4j-api'
+    compile group: 'com.google.code.findbugs', name: 'jsr305'
+    compile group: 'com.google.code.gson', name: 'gson'
     
-    testCompile libraries.orgTestng.testng
-    testCompile libraries.orgMockito.mockitoCore
+    testCompile group: 'org.testng', name: 'testng'
+    testCompile group: 'org.mockito', name: 'mockito-core'
     testCompile project(path: ':corona-ide-core-api', configuration: 'testSupport')
 }
