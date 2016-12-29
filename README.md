@@ -41,3 +41,7 @@ Until Corona IDE reaches general availability with required features, it will be
 It is also recommended to turn on "save actions", under the Java Editor settings, to format saved lines and perform other cleanup operations
 
 Once settings are configured, use the Eclipse Gradle IDE plug-in (we are currently using STS) to import all projects from the root of the repository
+
+#### Gradle Build Scan
+
+Corona IDE has the plug-ins required for [Gradle Build Scan](https://gradle.com/) setup. Simply run a build with the `-Dscan` option, and a build scan will be performed
