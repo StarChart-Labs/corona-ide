@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.coronaide.core.Datastore;
 import com.coronaide.core.Version;
+import com.coronaide.core.datastore.Datastore;
 
 /**
  * Simple datastore implementation which allows testing for data storage APIs

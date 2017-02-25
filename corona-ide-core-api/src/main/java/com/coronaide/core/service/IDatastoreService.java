@@ -13,9 +13,9 @@ package com.coronaide.core.service;
 import java.util.Optional;
 
 import com.coronaide.core.Application;
-import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Workspace;
+import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.exception.DataStorageException;
 
 /**

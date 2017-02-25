@@ -8,11 +8,13 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  *******************************************************************************/
-package com.coronaide.core;
+package com.coronaide.core.datastore;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+
+import com.coronaide.core.Version;
 
 /**
  * Represents operations used to load/store persistent data for use within Corona IDE

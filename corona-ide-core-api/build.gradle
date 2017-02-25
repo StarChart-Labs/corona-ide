@@ -4,6 +4,7 @@ version = "${coronaIdeApiVersion}"
 //Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305'
+    compile group: 'com.google.code.gson', name: 'gson'
     
     testCompile group: 'org.testng', name: 'testng'
 }

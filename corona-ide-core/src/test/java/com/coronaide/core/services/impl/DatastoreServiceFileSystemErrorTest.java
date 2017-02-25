@@ -21,10 +21,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.Application;
-import com.coronaide.core.Datastore;
 import com.coronaide.core.Module;
 import com.coronaide.core.Version;
 import com.coronaide.core.Workspace;
+import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.exception.DataStorageException;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.test.core.TestDatastore;
