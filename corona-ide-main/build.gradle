@@ -1,5 +1,3 @@
-apply plugin: 'com.blackducksoftware.hub'
-
 dependencies {
     compile project(':corona-ide-core')
 }

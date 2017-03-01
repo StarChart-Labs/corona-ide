@@ -17,6 +17,8 @@ plugins {
     id 'org.sonarqube' version '2.2'
 }
 
+apply plugin: 'com.blackducksoftware.hub'
+
 sonarqube {
     properties {
         property 'sonar.projectName', 'Corona IDE'
