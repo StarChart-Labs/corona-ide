@@ -17,3 +17,5 @@ script:
   
 after_success:
   - codecov
+  - ./gradlew :corona-ide-main:createHubOutput
+  - bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./corona-ide-main/build/blackduck/*_bdio.jsonld
