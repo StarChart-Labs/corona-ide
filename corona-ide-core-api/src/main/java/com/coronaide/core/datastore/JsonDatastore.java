@@ -15,7 +15,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.coronaide.core.Version;
+import com.coronaide.core.model.Version;
 import com.google.gson.Gson;
 
 /**

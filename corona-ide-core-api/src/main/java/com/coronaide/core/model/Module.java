@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) Oct 24, 2016 Corona IDE.
+ * Copyright (c) Oct 16, 2016 Corona IDE.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,21 +8,25 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  *******************************************************************************/
-package com.coronaide.core.service;
-
-import com.coronaide.core.model.Application;
+package com.coronaide.core.model;
 
 /**
- * Allows retrieval of Corona IDE application information
+ * Represents a collection of related additions or enhancements to the Corona IDE platform
  *
  * @author romeara
  * @since 0.1
  */
-public interface IApplicationService {
+public interface Module {
 
     /**
-     * @return A representation of basic data for the currently running application instance
+     * @return ID of the module - usually matches the base package name for source of the module
      * @since 0.1
      */
-    Application get();
+    String getId();
+
+    /**
+     * @return The current module implementation version
+     * @since 0.1
+     */
+    Version getVersion();
 }

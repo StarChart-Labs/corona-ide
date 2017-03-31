@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.coronaide.core.service;
 
-import com.coronaide.core.Workspace;
+import com.coronaide.core.model.Workspace;
 
 /**
  * Allows retrieval of development environment information

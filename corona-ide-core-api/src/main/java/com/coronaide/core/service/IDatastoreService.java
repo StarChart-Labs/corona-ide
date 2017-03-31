@@ -12,11 +12,11 @@ package com.coronaide.core.service;
 
 import java.util.Optional;
 
-import com.coronaide.core.Application;
-import com.coronaide.core.Module;
-import com.coronaide.core.Workspace;
 import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.exception.DataStorageException;
+import com.coronaide.core.model.Application;
+import com.coronaide.core.model.Module;
+import com.coronaide.core.model.Workspace;
 
 /**
  * Allows manipulation of data stores for the application, workspaces, and projects

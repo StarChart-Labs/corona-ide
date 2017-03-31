@@ -13,8 +13,8 @@ package com.coronaide.core.service;
 import java.io.IOException;
 import java.util.Collection;
 
-import com.coronaide.core.Project;
-import com.coronaide.core.ProjectRequest;
+import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectRequest;
 
 /**
  * Allows interaction with projects within the current workspace
