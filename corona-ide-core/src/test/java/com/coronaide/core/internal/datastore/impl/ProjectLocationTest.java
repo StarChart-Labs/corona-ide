@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) Jan 15, 2017 Corona IDE.
+/*
+ * Copyright (c) Mar 29, 2017 Corona IDE.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,85 +7,79 @@
  *
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
- *******************************************************************************/
-package com.coronaide.core;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+ */
+package com.coronaide.core.internal.datastore.impl;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ProjectRequestTest {
-
-    private static final Path ROOT = Paths.get("root");
+public class ProjectLocationTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullRootDirectory() throws Exception {
-        new ProjectRequest(null);
+        new ProjectLocation(null);
     }
 
     @Test
     public void getTest() throws Exception {
-        ProjectRequest result = new ProjectRequest(ROOT);
+        ProjectLocation result = new ProjectLocation("root");
 
-        Assert.assertEquals(result.getRootDirectory(), ROOT);
+        Assert.assertEquals(result.getRootDirectory(), "root");
     }
 
     @Test
     public void hashCodeEqualWhenDataEqual() throws Exception {
-        ProjectRequest result1 = new ProjectRequest(ROOT);
-        ProjectRequest result2 = new ProjectRequest(ROOT);
+        ProjectLocation result1 = new ProjectLocation("root");
+        ProjectLocation result2 = new ProjectLocation("root");
 
         Assert.assertEquals(result1.hashCode(), result2.hashCode());
     }
 
     @Test
     public void equalsNull() throws Exception {
-        ProjectRequest result = new ProjectRequest(ROOT);
+        ProjectLocation result = new ProjectLocation("root");
 
         Assert.assertFalse(result.equals(null));
     }
 
     @Test
     public void equalsDifferentClass() throws Exception {
-        ProjectRequest result = new ProjectRequest(ROOT);
+        ProjectLocation result = new ProjectLocation("root");
 
         Assert.assertFalse(result.equals("string"));
     }
 
     @Test
     public void equalsSelf() throws Exception {
-        ProjectRequest result = new ProjectRequest(ROOT);
+        ProjectLocation result = new ProjectLocation("root");
 
         Assert.assertTrue(result.equals(result));
     }
 
     @Test
     public void equalsDifferentData() throws Exception {
-        Path root2 = Paths.get("root2");
-        ProjectRequest result1 = new ProjectRequest(ROOT);
-        ProjectRequest result2 = new ProjectRequest(root2);
+        ProjectLocation result1 = new ProjectLocation("root");
+        ProjectLocation result2 = new ProjectLocation("root2");
 
         Assert.assertFalse(result1.equals(result2));
     }
 
     @Test
     public void equalsSameData() throws Exception {
-        ProjectRequest result1 = new ProjectRequest(ROOT);
-        ProjectRequest result2 = new ProjectRequest(ROOT);
+        ProjectLocation result1 = new ProjectLocation("root");
+        ProjectLocation result2 = new ProjectLocation("root");
 
         Assert.assertTrue(result1.equals(result2));
     }
 
     @Test
     public void toStringTest() throws Exception {
-        ProjectRequest obj = new ProjectRequest(ROOT);
+        ProjectLocation obj = new ProjectLocation("root");
 
         String result = obj.toString();
 
         Assert.assertNotNull(result);
-        Assert.assertTrue(result.contains("rootDirectory=" + ROOT.toString()));
+        Assert.assertTrue(result.contains("rootDirectory=root"));
     }
 
 }

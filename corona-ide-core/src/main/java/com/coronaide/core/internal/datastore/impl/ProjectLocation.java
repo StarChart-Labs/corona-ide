@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) Jan 15, 2017 Corona IDE.
+/*
+ * Copyright (c) Feb 27, 2017 Corona IDE.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,33 +7,35 @@
  *
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
- *******************************************************************************/
-package com.coronaide.core;
+ */
+package com.coronaide.core.internal.datastore.impl;
 
-import java.nio.file.Path;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents a request to create or alter a project within Corona IDE. A project is a collection of files and settings
- * which constitutes a set of functionality
+ * Represents the location of a project. Used within internal data storage to save project locations to persistent
+ * storage
+ *
+ * <p>
+ * Clients are not intended to interact with this class directly
  *
  * @author romeara
  * @since 0.1
  */
 @Immutable
-public final class ProjectRequest {
+public class ProjectLocation {
 
-    private final Path rootDirectory;
+    private final String rootDirectory;
 
     /**
      * @param rootDirectory
      *            The directory which is the root of all files which are considered part of the project
      * @since 0.1
      */
-    public ProjectRequest(Path rootDirectory) {
+    public ProjectLocation(String rootDirectory) {
         this.rootDirectory = Objects.requireNonNull(rootDirectory);
     }
 
@@ -41,7 +43,7 @@ public final class ProjectRequest {
      * @return The directory which is the root of all files which are considered part of the project
      * @since 0.1
      */
-    public Path getRootDirectory() {
+    public String getRootDirectory() {
         return rootDirectory;
     }
 
@@ -54,8 +56,8 @@ public final class ProjectRequest {
     public boolean equals(@Nullable Object obj) {
         boolean result = false;
 
-        if (obj instanceof ProjectRequest) {
-            ProjectRequest compare = (ProjectRequest) obj;
+        if (obj instanceof ProjectLocation) {
+            ProjectLocation compare = (ProjectLocation) obj;
 
             result = Objects.equals(compare.getRootDirectory(), getRootDirectory());
         }
