@@ -4,8 +4,11 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api'
     compile group: 'com.google.code.findbugs', name: 'jsr305'
     compile group: 'com.google.code.gson', name: 'gson'
+    compile group: 'org.springframework', name: 'spring-context'
     
     testCompile group: 'org.testng', name: 'testng'
     testCompile group: 'org.mockito', name: 'mockito-core'
     testCompile project(path: ':corona-ide-core-api', configuration: 'testSupport')
+    
+    testRuntime group: 'org.slf4j', name: 'slf4j-simple'
 }

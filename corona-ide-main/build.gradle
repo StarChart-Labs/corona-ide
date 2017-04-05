@@ -1,3 +1,20 @@
+task run (type: JavaExec){
+    def applicationDirectory= file(project.properties['applicationDirectory'] ?: "${projectDir}").toString()
+    def workspaceDirectory= file(project.properties['workspaceDirectory'] ?: "${projectDir}").toString()
+    
+    main = 'com.conronaide.main.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    args = [ "--applicationDirectory", "${applicationDirectory}", "--workspaceDirectory", "${workspaceDirectory}" ]
+    
+}
+
+//Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
     compile project(':corona-ide-core')
+    
+    compile group: 'args4j', name: 'args4j'
+    compile group: 'org.slf4j', name: 'slf4j-api'
+    compile group: 'org.springframework', name: 'spring-context'
+    
+    runtime group: 'org.slf4j', name: 'slf4j-simple'
 }
