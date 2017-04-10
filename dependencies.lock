@@ -5,12 +5,11 @@
 	
 	"com.google.code.gson:gson": { "locked": "2.7" },
 	
-	"org.springframework:spring-context": { "locked": "4.2.5.RELEASE" },
+	"org.springframework:spring-context": { "locked": "4.3.7.RELEASE" },
 	
 	"org.mockito:mockito-core": { "locked": "2.2.5" },
 	
 	"org.slf4j:slf4j-api": { "locked": "1.7.21" },
-	
 	"org.slf4j:slf4j-simple": { "locked": "1.7.12" },
 	
 	"org.testng:testng": { "locked": "6.9.10" },
