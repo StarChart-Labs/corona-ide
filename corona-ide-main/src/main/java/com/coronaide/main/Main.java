@@ -8,7 +8,7 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  */
-package com.conronaide.main;
+package com.coronaide.main;
 
 import java.nio.file.Paths;
 

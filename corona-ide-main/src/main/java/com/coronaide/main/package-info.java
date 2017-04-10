@@ -11,6 +11,6 @@
  * @author romeara
  */
 @ParametersAreNonnullByDefault
-package com.conronaide.main;
+package com.coronaide.main;
 
 import javax.annotation.ParametersAreNonnullByDefault;
