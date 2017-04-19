@@ -7,8 +7,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.netflix.nebula:nebula-dependency-recommender:3.6.3'
-        classpath 'com.blackducksoftware.integration:hub-gradle-plugin:3.4.1'
+        classpath group: 'com.netflix.nebula', name: 'nebula-dependency-recommender', version: '3.6.3'
+        classpath group: 'com.blackducksoftware.integration', name: 'hub-gradle-plugin', version: '3.4.1'
     }
 }
 
@@ -91,10 +91,22 @@ subprojects{
             resources {
                 srcDir 'src/test-support/resources'
             }
-            compileClasspath += sourceSets.test.compileClasspath
-            runtimeClasspath += sourceSets.test.runtimeClasspath
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+        
+        test{
+            compileClasspath += testSupport.output
+            runtimeClasspath += testSupport.output
         }
     }
+    
+    configurations.testSupportCompile.extendsFrom(configurations.compile)
+    configurations.testSupportRuntime.extendsFrom(configurations.runtime)
+    
+    configurations.testSupport.extendsFrom(configurations.testSupportCompile)
+    configurations.testSupport.extendsFrom(configurations.testSupportRuntime)
+    
     
     task testSupportJar(type:Jar) {
         from sourceSets.testSupport.output
