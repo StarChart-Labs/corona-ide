@@ -10,6 +10,7 @@
  */
 package com.coronaide.main;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -19,8 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.coronaide.core.config.CoronaIdeCoreConfiguration;
 import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.main.config.CoronaIdeMainConfiguration;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Entry point for the IDE, started as per standard Java application patterns
@@ -28,7 +35,7 @@ import com.coronaide.core.internal.service.ICoreConfiguration;
  * @author romeara
  * @since 0.1
  */
-public class Main {
+public class Main extends Application {
 
     /** Logger reference to output information to the application log files */
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -39,8 +46,10 @@ public class Main {
     @Option(name = "--workspaceDirectory", usage = "Working directory being used as a context", required = true)
     private String workspaceDirectory;
 
+    private static Parent root;
+
     public static void main(String[] args) {
-        new Main().start(args);
+        new Main().run(args);
     }
 
     /**
@@ -49,7 +58,7 @@ public class Main {
      * @param args
      *            Arguments used to control application behavior
      */
-    public void start(String[] args) {
+    public void run(String[] args) {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
@@ -62,15 +71,32 @@ public class Main {
         }
 
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-                CoronaIdeCoreConfiguration.class)) {
+                CoronaIdeMainConfiguration.class)) {
             // Lookup the core configuration and initialize - this is the ONLY place the setters should be called
             ICoreConfiguration coreConfiguration = context.getBean(ICoreConfiguration.class);
             coreConfiguration.setLocations(Paths.get(applicationDirectory), Paths.get(workspaceDirectory));
 
             logger.info("Running in workspace {} from {}", workspaceDirectory, applicationDirectory);
 
-            // TODO Lookup and start a UI class
+            // Configure our FXML loader to use Spring as its dependency master, then start the UI
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Main.fxml"));
+            loader.setControllerFactory(context::getBean);
+            root = loader.load();
+            Application.launch();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Starts the JavaFX user interface
+     */
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Scene scene = new Scene(root, 300, 275);
+        primaryStage.setTitle("Corona IDE");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
 }

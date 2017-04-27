@@ -5,6 +5,8 @@
 	
 	"com.google.code.gson:gson": { "locked": "2.7" },
 	
+	"javax.inject:javax.inject": { "locked": "1" },
+	
 	"org.springframework:spring-context": { "locked": "4.3.7.RELEASE" },
 	
 	"org.mockito:mockito-core": { "locked": "2.2.5" },
