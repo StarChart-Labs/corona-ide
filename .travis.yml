@@ -19,3 +19,10 @@ after_success:
   - codecov
   - ./gradlew createHubOutput
   - bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./build/blackduck/*_bdio.jsonld
+  
+notifications:
+  email:
+    recipients:
+      - corona.ide.dev@gmail.com
+    on_success: change
+    on_failure: always
