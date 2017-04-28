@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.model.Version;
 
 /**
  * Simple datastore implementation which allows testing for data storage APIs
@@ -26,8 +25,6 @@ import com.coronaide.core.model.Version;
  * @author romeara
  */
 public class TestDatastore implements Datastore<String> {
-
-    private boolean migrateCalled = false;
 
     @Override
     public String getKey() {
@@ -50,19 +47,6 @@ public class TestDatastore implements Datastore<String> {
         }
 
         return lines.stream().collect(Collectors.joining("\n"));
-    }
-
-    @Override
-    public String migrate(BufferedReader source, Version sourceVersion) throws IOException {
-        migrateCalled = true;
-        return load(source);
-    }
-
-    /**
-     * @return True if the migrate method has been called, false otherwise
-     */
-    public boolean isMigrateCalled() {
-        return migrateCalled;
     }
 
 }

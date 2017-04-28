@@ -167,12 +167,7 @@ public class DatastoreService implements IDatastoreService {
 
         if (existingVersion.isPresent() && datastoreFile.exists()) {
             try (BufferedReader input = new BufferedReader(new FileReader(datastoreFile))) {
-                if (!Objects.equals(existingVersion.get(), module.getVersion())) {
-                    // Migrate the old data - store must wait until reader is closed
-                    result = datastore.migrate(input, existingVersion.get());
-                } else {
-                    result = datastore.load(input);
-                }
+                result = datastore.load(input);
             }
 
             if (!Objects.equals(existingVersion.get(), module.getVersion())) {

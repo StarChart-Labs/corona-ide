@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.JsonDatastore;
-import com.coronaide.core.model.Version;
 
 public class JsonDatastoreTest {
 
@@ -121,33 +120,6 @@ public class JsonDatastoreTest {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(testSource))) {
             String result = datastore.load(reader);
-
-            Assert.assertEquals(result, TEST_CONTENT);
-        }
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
-    public void migrateNullSource() throws Exception {
-        JsonDatastore<String> datastore = new JsonDatastore<>("key", String.class);
-
-        datastore.migrate(null, new Version(0, 0, 1));
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
-    public void migrateNullSourceVersion() throws Exception {
-        JsonDatastore<String> datastore = new JsonDatastore<>("key", String.class);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(testSource))) {
-            datastore.migrate(reader, null);
-        }
-    }
-
-    @Test
-    public void migrate() throws Exception {
-        JsonDatastore<String> datastore = new JsonDatastore<>("key", String.class);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(testSource))) {
-            String result = datastore.migrate(reader, new Version(0, 0, 1));
 
             Assert.assertEquals(result, TEST_CONTENT);
         }

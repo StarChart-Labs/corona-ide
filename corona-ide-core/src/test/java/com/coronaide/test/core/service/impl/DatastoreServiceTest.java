@@ -106,19 +106,6 @@ public class DatastoreServiceTest {
     }
 
     @Test
-    public void loadApplicationDataMigrate() throws Exception {
-        // Create a fake corona directory
-        TestDatastore datastore = new TestDatastore();
-
-        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 1));
-        datastoreService.store(application, module, datastore, "string");
-
-        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 2));
-        Assert.assertEquals(datastoreService.load(application, module, datastore).orElse(null), "string");
-        Assert.assertTrue(datastore.isMigrateCalled());
-    }
-
-    @Test
     public void clearApplicationData() throws Exception {
         // Create a fake corona directory
         TestDatastore datastore = new TestDatastore();
@@ -164,19 +151,6 @@ public class DatastoreServiceTest {
         datastoreService.store(workspace, module, datastore, "string");
 
         Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
-    }
-
-    @Test
-    public void loadWorkspaceDataMigrate() throws Exception {
-        // Create a fake corona directory
-        TestDatastore datastore = new TestDatastore();
-
-        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 1));
-        datastoreService.store(workspace, module, datastore, "string");
-
-        Mockito.when(module.getVersion()).thenReturn(new Version(0, 0, 2));
-        Assert.assertEquals(datastoreService.load(workspace, module, datastore).orElse(null), "string");
-        Assert.assertTrue(datastore.isMigrateCalled());
     }
 
     @Test

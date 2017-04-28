@@ -14,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-import com.coronaide.core.model.Version;
-
 /**
  * Represents operations used to load/store persistent data for use within Corona IDE
  *
@@ -58,17 +56,4 @@ public interface Datastore<T> {
      */
     T load(BufferedReader source) throws IOException;
 
-    /**
-     * Reads from an input stream, migrating the data from a previous version to the current representation
-     *
-     * @param source
-     *            Reader containing data in a previous version format
-     * @param sourceVersion
-     *            The version the read data is from
-     * @return A migrated representation of the provided data
-     * @throws IOException
-     *             If there is an error reading data during de-serialization
-     * @since 0.1
-     */
-    T migrate(BufferedReader source, Version sourceVersion) throws IOException;
 }

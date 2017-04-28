@@ -15,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.coronaide.core.model.Version;
 import com.google.gson.Gson;
 
 /**
@@ -70,14 +69,6 @@ public class JsonDatastore<T> implements Datastore<T> {
         Objects.requireNonNull(source);
 
         return gson.fromJson(source, representation);
-    }
-
-    @Override
-    public T migrate(BufferedReader source, Version sourceVersion) throws IOException {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sourceVersion);
-
-        return load(source);
     }
 
 }
