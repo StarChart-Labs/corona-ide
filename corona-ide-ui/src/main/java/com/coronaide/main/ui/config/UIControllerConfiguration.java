@@ -1,4 +1,4 @@
-package com.coronaide.main.config;
+package com.coronaide.main.ui.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

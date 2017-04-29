@@ -11,6 +11,7 @@ task run (type: JavaExec){
 //Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
     compile project(':corona-ide-core')
+    compile project(':corona-ide-ui')
     
     compile group: 'args4j', name: 'args4j'
     compile group: 'javax.inject', name: 'javax.inject'

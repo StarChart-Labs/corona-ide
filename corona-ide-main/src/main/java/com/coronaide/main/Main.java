@@ -10,7 +10,6 @@
  */
 package com.coronaide.main;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -22,12 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.main.config.CoronaIdeMainConfiguration;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import com.coronaide.main.ui.CoronaUiApplication;
 
 /**
  * Entry point for the IDE, started as per standard Java application patterns
@@ -35,7 +29,7 @@ import javafx.stage.Stage;
  * @author romeara
  * @since 0.1
  */
-public class Main extends Application {
+public class Main {
 
     /** Logger reference to output information to the application log files */
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -46,10 +40,8 @@ public class Main extends Application {
     @Option(name = "--workspaceDirectory", usage = "Working directory being used as a context", required = true)
     private String workspaceDirectory;
 
-    private static Parent root;
-
     public static void main(String[] args) {
-        new Main().run(args);
+        new Main().start(args);
     }
 
     /**
@@ -58,7 +50,7 @@ public class Main extends Application {
      * @param args
      *            Arguments used to control application behavior
      */
-    public void run(String[] args) {
+    public void start(String[] args) {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
@@ -77,26 +69,8 @@ public class Main extends Application {
             coreConfiguration.setLocations(Paths.get(applicationDirectory), Paths.get(workspaceDirectory));
 
             logger.info("Running in workspace {} from {}", workspaceDirectory, applicationDirectory);
-
-            // Configure our FXML loader to use Spring as its dependency master, then start the UI
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Main.fxml"));
-            loader.setControllerFactory(context::getBean);
-            root = loader.load();
-            Application.launch();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            CoronaUiApplication.launchUi(context);
         }
-    }
-
-    /**
-     * Starts the JavaFX user interface
-     */
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(root, 300, 275);
-        primaryStage.setTitle("Corona IDE");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
 }
