@@ -40,6 +40,8 @@ Until Corona IDE reaches general availability with required features, it will be
 
 It is also recommended to turn on "save actions", under the Java Editor settings, to format saved lines and perform other cleanup operations
 
+You will also need to install the Eclipse plugin [e(fx)clipse](http://www.eclipse.org/efxclipse/index.html).
+
 Once settings are configured, use the Eclipse Gradle IDE plug-in (we are currently using STS) to import all projects from the root of the repository
 
 #### Gradle Build Scan
