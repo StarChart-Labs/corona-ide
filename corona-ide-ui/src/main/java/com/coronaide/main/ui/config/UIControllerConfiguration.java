@@ -3,6 +3,8 @@ package com.coronaide.main.ui.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.coronaide.core.service.IProjectService;
+import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.main.ui.controller.SimpleController;
 
 /**
@@ -16,8 +18,8 @@ import com.coronaide.main.ui.controller.SimpleController;
 public class UIControllerConfiguration {
 
     @Bean
-    public SimpleController simpleController() {
-        return new SimpleController();
+    public SimpleController simpleController(IWorkspaceService workspaceService, IProjectService projectService) {
+        return new SimpleController(workspaceService, projectService);
     }
 
 }

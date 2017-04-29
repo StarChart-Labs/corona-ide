@@ -11,16 +11,25 @@
 package com.coronaide.main.ui.controller;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.core.model.Project;
+import com.coronaide.core.model.Workspace;
+import com.coronaide.core.service.IProjectService;
+import com.coronaide.core.service.IWorkspaceService;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 
 /**
  * A controller for the simple JavaFX Scene
@@ -30,17 +39,34 @@ import javafx.scene.control.Label;
  */
 public class SimpleController implements Initializable {
 
+    private IWorkspaceService workspaceService;
+
+    private IProjectService projectService;
+
     @Inject
-    private ICoreConfiguration configuration;
+    public SimpleController(IWorkspaceService workspaceService, IProjectService projectService) {
+        this.workspaceService = Objects.requireNonNull(workspaceService);
+        this.projectService = Objects.requireNonNull(projectService);
+    }
 
     @FXML
     private Label labelWorkspace;
 
+    @FXML
+    private ListView<String> listViewProjects;
+
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        Objects.requireNonNull(configuration);
+        Objects.requireNonNull(workspaceService);
 
-        labelWorkspace.setText(configuration.getActiveWorkspaceDirectory().toString());
+        Workspace workspace = workspaceService.getActiveWorkspace();
+        Path workingDir = workspace.getWorkingDirectory();
+
+        labelWorkspace
+                .setText(workingDir.subpath(workingDir.getNameCount() - 1, workingDir.getNameCount()).toString());
+        List<String> projectNamesList = projectService.getAll().stream().map(Project::getName).collect(Collectors.toList());
+        ObservableList<String> observableProjectNamesList = FXCollections.observableList(projectNamesList);
+        listViewProjects.setItems(observableProjectNamesList);
     }
 
 }

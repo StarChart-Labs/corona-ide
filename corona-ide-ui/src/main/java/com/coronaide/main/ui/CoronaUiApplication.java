@@ -37,7 +37,7 @@ public class CoronaUiApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = loader.load();
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 1000, 500);
         stage.setTitle("Corona IDE");
         stage.setScene(scene);
         stage.show();

@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coronaide.main.ui.controller.SimpleController">
-   <children>
-      <Label layoutY="17.0" text="Workspace">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelWorkspace" layoutX="77.0" layoutY="17.0" text="workspace" wrapText="true" />
-   </children>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coronaide.main.ui.controller.SimpleController">
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Workspace">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="labelWorkspace" text="workspace" wrapText="true">
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <ListView fx:id="listViewProjects" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </left>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="402.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="143.0" layoutY="92.0" text="Open a file for editing" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
