@@ -1,3 +1,7 @@
+test{
+    useJUnit()
+}
+
 //Dependency versions managed in $rootDir/dependencies.lock
 dependencies {
     compile project(':corona-ide-core')
