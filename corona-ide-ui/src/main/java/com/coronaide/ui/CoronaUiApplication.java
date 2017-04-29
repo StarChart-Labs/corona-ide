@@ -19,7 +19,7 @@ public class CoronaUiApplication extends Application {
     /**
      * Start the Corona UI.
      * 
-     * @param context
+     * @param springContext
      *            The Spring application context
      */
     public static void launchUi(AnnotationConfigApplicationContext springContext) {
