@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import com.coronaide.core.config.CoronaIdeCoreConfiguration;
+import com.coronaide.ui.config.UIControllerConfiguration;
 
 /**
  * Aggregation of the configuration classes required to run the Corona UI tests
@@ -23,7 +24,8 @@ import com.coronaide.core.config.CoronaIdeCoreConfiguration;
  */
 @Configuration
 @Import({
-        CoronaIdeCoreConfiguration.class
+        CoronaIdeCoreConfiguration.class,
+        UIControllerConfiguration.class
 })
 public class UITestConfiguration {
 

@@ -7,9 +7,10 @@
 	
 	"javax.inject:javax.inject": { "locked": "1" },
 	
-	"junit:junit": { "locked": "4.4" },
+	"junit:junit": { "locked": "4.12" },
 	
 	"org.springframework:spring-context": { "locked": "4.3.7.RELEASE" },
+	"org.springframework:spring-test": { "locked": "4.3.7.RELEASE" },
 	
 	"org.mockito:mockito-core": { "locked": "2.2.5" },
 	

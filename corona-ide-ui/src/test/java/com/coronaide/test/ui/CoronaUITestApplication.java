@@ -2,7 +2,7 @@ package com.coronaide.test.ui;
 
 import java.util.Objects;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javafx.application.Application;
@@ -15,7 +15,7 @@ public class CoronaUITestApplication extends Application {
 
     private static FXMLLoader loader;
 
-    private static AnnotationConfigApplicationContext context;
+    private static ApplicationContext context;
 
     /**
      * Start the Corona UI.
@@ -25,7 +25,7 @@ public class CoronaUITestApplication extends Application {
      * @throws Exception
      *             If the TestFX framework throws an exception
      */
-    public static void launchUi(AnnotationConfigApplicationContext springContext) throws Exception {
+    public static void launchUi(ApplicationContext springContext) throws Exception {
         context = Objects.requireNonNull(springContext);
         ApplicationTest.launch(CoronaUITestApplication.class);
     }

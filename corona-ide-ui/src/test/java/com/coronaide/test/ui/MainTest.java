@@ -1,7 +1,6 @@
 package com.coronaide.test.ui;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,27 +10,39 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.testfx.framework.junit.ApplicationTest;
 
+import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.core.model.Project;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
+import com.coronaide.test.ui.config.UITestConfiguration;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import junit.framework.Assert;
 
-public class MainTest extends ApplicationTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+// ApplicationContext will be loaded from the static inner ContextConfiguration class
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = UITestConfiguration.class)
+public class MainTest extends ApplicationTest implements ApplicationContextAware {
 
-    @Inject
-    private static AnnotationConfigApplicationContext springContext;
+    private static ApplicationContext springContext;
+
+    /* Need this because JUnit doesn't have any way to do a non-static BeforeClass method */
+    private static boolean initialized = false;
 
     @Inject
     private IWorkspaceService workspaceService;
@@ -42,19 +53,25 @@ public class MainTest extends ApplicationTest {
     private List<Project> testProjects = new ArrayList<>();
 
     @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        springContext = applicationContext;
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         stage.show();
     }
 
-    @BeforeClass
-    public static void setup() throws Exception {
-        CoronaUITestApplication.launchUi(springContext);
-    }
-
     @Before
-    public void initialize() throws IOException, URISyntaxException {
-        testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject"))));
-        testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject2"))));
+    public void setup() throws Exception {
+        if (!initialized) {
+            ICoreConfiguration coreConfiguration = springContext.getBean(ICoreConfiguration.class);
+            coreConfiguration.setLocations(Paths.get("/corona"), Paths.get("/corona/workspace"));
+            testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject"))));
+            testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject2"))));
+            CoronaUITestApplication.launchUi(springContext);
+            initialized = true;
+        }
     }
 
     @Test
@@ -70,7 +87,7 @@ public class MainTest extends ApplicationTest {
     public void projectListTest() {
         List<String> projectNamesList = testProjects.stream().map(Project::getName).collect(Collectors.toList());
         ListView<String> listViewProjects = lookup("#listViewProjects").query();
-        Assert.assertEquals(listViewProjects.getItems().size(), 2);
+        Assert.assertEquals(2, listViewProjects.getItems().size());
         for (String projectName : listViewProjects.getItems()) {
             Assert.assertTrue(projectNamesList.contains(projectName));
         }

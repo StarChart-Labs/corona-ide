@@ -10,7 +10,8 @@ dependencies {
     compile group: 'javax.inject', name: 'javax.inject'
     compile group: 'org.springframework', name: 'spring-context'
     
-    compile group: 'junit', name: 'junit'
+    testCompile group: 'junit', name: 'junit'
+    testCompile group: 'org.springframework', name: 'spring-test'
     testCompile group: 'org.testfx', name: 'testfx-core'
     testCompile group: 'org.testfx', name: 'testfx-junit'
 }
