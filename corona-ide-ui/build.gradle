@@ -5,4 +5,6 @@ dependencies {
     
     compile group: 'javax.inject', name: 'javax.inject'
     compile group: 'org.springframework', name: 'spring-context'
+    
+    testCompile group: 'org.testng', name: 'testng'
 }

@@ -21,7 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.main.config.CoronaIdeMainConfiguration;
-import com.coronaide.main.ui.CoronaUiApplication;
+import com.coronaide.ui.CoronaUiApplication;
 
 /**
  * Entry point for the IDE, started as per standard Java application patterns

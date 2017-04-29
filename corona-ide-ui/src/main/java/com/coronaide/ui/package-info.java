@@ -15,6 +15,6 @@
  * @since 0.1
  */
 @ParametersAreNonnullByDefault
-package com.coronaide.main.ui;
+package com.coronaide.ui;
 
 import javax.annotation.ParametersAreNonnullByDefault;

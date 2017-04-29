@@ -8,7 +8,7 @@
  * Contributors:
  *    nickavv - initial API and implementation and/or initial documentation
  */
-package com.coronaide.main.ui.controller;
+package com.coronaide.ui.controller;
 
 import java.net.URL;
 import java.nio.file.Path;
@@ -37,23 +37,23 @@ import javafx.scene.control.ListView;
  * @author nickavv
  * @since 0.1.0
  */
-public class SimpleController implements Initializable {
+public class MainController implements Initializable {
 
     private IWorkspaceService workspaceService;
 
     private IProjectService projectService;
-
-    @Inject
-    public SimpleController(IWorkspaceService workspaceService, IProjectService projectService) {
-        this.workspaceService = Objects.requireNonNull(workspaceService);
-        this.projectService = Objects.requireNonNull(projectService);
-    }
 
     @FXML
     private Label labelWorkspace;
 
     @FXML
     private ListView<String> listViewProjects;
+
+    @Inject
+    public MainController(IWorkspaceService workspaceService, IProjectService projectService) {
+        this.workspaceService = Objects.requireNonNull(workspaceService);
+        this.projectService = Objects.requireNonNull(projectService);
+    }
 
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

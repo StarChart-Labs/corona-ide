@@ -1,4 +1,4 @@
-package com.coronaide.main.ui;
+package com.coronaide.ui;
 
 import java.util.Objects;
 

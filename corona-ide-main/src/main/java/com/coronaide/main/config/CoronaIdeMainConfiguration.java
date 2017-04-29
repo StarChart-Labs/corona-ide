@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import com.coronaide.core.config.CoronaIdeCoreConfiguration;
-import com.coronaide.main.ui.config.UIControllerConfiguration;
+import com.coronaide.ui.config.UIControllerConfiguration;
 
 /**
  * Aggregation of the configuration classes required to run the Corona application

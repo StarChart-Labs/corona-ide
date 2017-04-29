@@ -11,6 +11,6 @@
  * @author nickavv
  */
 @ParametersAreNonnullByDefault
-package com.coronaide.main.ui.config;
+package com.coronaide.ui.config;
 
 import javax.annotation.ParametersAreNonnullByDefault;
