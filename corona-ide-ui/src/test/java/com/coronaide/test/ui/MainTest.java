@@ -1,6 +1,7 @@
 package com.coronaide.test.ui;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -65,8 +66,12 @@ public class MainTest extends ApplicationTest implements ApplicationContextAware
     @Before
     public void setup() throws Exception {
         if (!initialized) {
+            Path tempAppDirectory = Files.createTempDirectory("corona-app");
+            Path tempWorkspaceDirectory = Files.createTempDirectory("corona-workspace");
+
             ICoreConfiguration coreConfiguration = springContext.getBean(ICoreConfiguration.class);
-            coreConfiguration.setLocations(Paths.get("/corona"), Paths.get("/corona/workspace"));
+            coreConfiguration.setLocations(tempAppDirectory, tempWorkspaceDirectory);
+
             testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject"))));
             testProjects.add(projectService.create(new ProjectRequest(Paths.get("testProject2"))));
             CoronaUITestApplication.launchUi(springContext);
@@ -78,7 +83,7 @@ public class MainTest extends ApplicationTest implements ApplicationContextAware
     public void workspaceLabelTextTest() {
         Workspace workspace = workspaceService.getActiveWorkspace();
         Path workingDir = workspace.getWorkingDirectory();
-        
+
         Label labelWorkspace = lookup("#labelWorkspace").query();
         Assert.assertEquals(labelWorkspace.getText(), workingDir.getName(workingDir.getNameCount() - 2).toString());
     }
@@ -92,13 +97,13 @@ public class MainTest extends ApplicationTest implements ApplicationContextAware
             Assert.assertTrue(projectNamesList.contains(projectName));
         }
     }
-    
+
     @After
     public void teardown() throws IOException {
         for (Project t : testProjects) {
             projectService.delete(t);
         }
     }
-    
+
 
 }
