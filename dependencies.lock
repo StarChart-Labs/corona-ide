@@ -17,6 +17,7 @@
 	"org.slf4j:slf4j-api": { "locked": "1.7.21" },
 	"org.slf4j:slf4j-simple": { "locked": "1.7.12" },
 	
+	"org.testfx:openjfx-monocle" : { "locked": "8u76-b04" },
 	"org.testfx:testfx-core" : { "locked": "4.0.6-alpha" },
 	"org.testfx:testfx-junit" : { "locked": "4.0.6-alpha" },
 	

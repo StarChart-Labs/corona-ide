@@ -80,7 +80,7 @@ public class MainTest extends ApplicationTest implements ApplicationContextAware
         Path workingDir = workspace.getWorkingDirectory();
         
         Label labelWorkspace = lookup("#labelWorkspace").query();
-        Assert.assertEquals(labelWorkspace.getText(), workingDir.getName(workingDir.getNameCount() - 1).toString());
+        Assert.assertEquals(labelWorkspace.getText(), workingDir.getName(workingDir.getNameCount() - 2).toString());
     }
 
     @Test

@@ -1,4 +1,9 @@
 test{
+	System.setProperty("testfx.robot", "glass")
+    System.setProperty("testfx.headless", "true")
+    System.setProperty("prism.order", "sw")
+    System.setProperty("prism.text", "t2k")
+    System.setProperty("java.awt.headless", "true")
     useJUnit()
 }
 
@@ -14,4 +19,5 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-test'
     testCompile group: 'org.testfx', name: 'testfx-core'
     testCompile group: 'org.testfx', name: 'testfx-junit'
+    testRuntime group: 'org.testfx', name: 'openjfx-monocle'
 }

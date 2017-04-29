@@ -63,7 +63,7 @@ public class MainController implements Initializable {
         Path workingDir = workspace.getWorkingDirectory();
 
         labelWorkspace
-                .setText(workingDir.getName(workingDir.getNameCount() - 1).toString());
+                .setText(workingDir.getName(workingDir.getNameCount() - 2).toString());
         List<String> projectNamesList = projectService.getAll().stream().map(Project::getName).collect(Collectors.toList());
         ObservableList<String> observableProjectNamesList = FXCollections.observableList(projectNamesList);
         listViewProjects.setItems(observableProjectNamesList);
