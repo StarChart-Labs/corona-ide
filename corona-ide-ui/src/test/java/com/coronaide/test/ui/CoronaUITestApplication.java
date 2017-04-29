@@ -1,8 +1,9 @@
-package com.coronaide.ui;
+package com.coronaide.test.ui;
 
 import java.util.Objects;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.testfx.framework.junit.ApplicationTest;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class CoronaUiApplication extends Application {
+public class CoronaUITestApplication extends Application {
 
     private static FXMLLoader loader;
 
@@ -21,10 +22,12 @@ public class CoronaUiApplication extends Application {
      * 
      * @param springContext
      *            The Spring application context
+     * @throws Exception
+     *             If the TestFX framework throws an exception
      */
-    public static void launchUi(AnnotationConfigApplicationContext springContext) {
+    public static void launchUi(AnnotationConfigApplicationContext springContext) throws Exception {
         context = Objects.requireNonNull(springContext);
-        Application.launch(CoronaUiApplication.class);
+        ApplicationTest.launch(CoronaUITestApplication.class);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class CoronaUiApplication extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = loader.load();
         Scene scene = new Scene(root, 1000, 500);
-        stage.setTitle("Corona IDE");
+        stage.setTitle("Corona IDE Testing");
         stage.setScene(scene);
         stage.show();
     }

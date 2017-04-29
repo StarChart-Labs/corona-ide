@@ -21,7 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.main.config.CoronaIdeMainConfiguration;
-import com.coronaide.ui.CoronaUiApplication;
+import com.coronaide.ui.CoronaUIApplication;
 
 /**
  * Entry point for the IDE, started as per standard Java application patterns
@@ -69,7 +69,7 @@ public class Main {
             coreConfiguration.setLocations(Paths.get(applicationDirectory), Paths.get(workspaceDirectory));
 
             logger.info("Running in workspace {} from {}", workspaceDirectory, applicationDirectory);
-            CoronaUiApplication.launchUi(context);
+            CoronaUIApplication.launchUi(context);
         }
     }
 
