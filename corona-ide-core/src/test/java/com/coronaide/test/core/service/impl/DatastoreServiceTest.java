@@ -10,12 +10,11 @@
  *******************************************************************************/
 package com.coronaide.test.core.service.impl;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -168,26 +167,14 @@ public class DatastoreServiceTest {
     }
 
     private void assertFileContents(Path path, String expected) throws IOException {
-        StringBuilder result = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
-            String line = reader.readLine();
-
-            while (line != null) {
-                if (result.length() > 0) {
-                    result.append('\n');
-                }
-
-                result.append(line);
-                line = reader.readLine();
-            }
-        }
+        String result = Files.lines(path)
+                .collect(Collectors.joining("\n"));
 
         Assert.assertEquals(result.toString(), expected);
     }
 
     private void assertStoredVersion(Path versionFilePath, String datastoreKey, Version expected) throws IOException {
-        try (Reader reader = new FileReader(versionFilePath.toFile())) {
+        try (Reader reader = Files.newBufferedReader(versionFilePath)) {
             JsonObject versions = new JsonParser().parse(reader)
                     .getAsJsonObject();
 

@@ -12,9 +12,6 @@ package com.coronaide.core.service.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.FileVisitResult;
@@ -163,10 +160,10 @@ public class DatastoreService implements IDatastoreService {
 
         Path moduleDirectory = getOrCreateModuleDirectory(coronaDirectory, module);
         Optional<Version> existingVersion = loadVersion(moduleDirectory, datastore.getKey());
-        File datastoreFile = moduleDirectory.resolve(datastore.getKey()).toFile();
+        Path datastorePath = moduleDirectory.resolve(datastore.getKey());
 
-        if (existingVersion.isPresent() && datastoreFile.exists()) {
-            try (BufferedReader input = new BufferedReader(new FileReader(datastoreFile))) {
+        if (existingVersion.isPresent() && Files.exists(datastorePath)) {
+            try (BufferedReader input = Files.newBufferedReader(datastorePath)) {
                 result = datastore.load(input);
             }
 
@@ -196,14 +193,14 @@ public class DatastoreService implements IDatastoreService {
         Path moduleDirectory = getOrCreateModuleDirectory(coronaDirectory, module);
         storeVersion(moduleDirectory, module.getVersion(), datastore.getKey());
 
-        File datastoreFile = moduleDirectory.resolve(datastore.getKey()).toFile();
+        Path datastoreFile = moduleDirectory.resolve(datastore.getKey());
 
-        if (!datastoreFile.exists() && !datastoreFile.createNewFile()) {
-            throw new IOException("Failed to create datastore file (" + datastoreFile.toPath().toString() + ")");
+        if (!Files.exists(datastoreFile)) {
+            Files.createFile(datastoreFile);
         }
 
         if (data != null) {
-            try (BufferedWriter output = new BufferedWriter(new FileWriter(datastoreFile))) {
+            try (BufferedWriter output = Files.newBufferedWriter(datastoreFile)) {
                 datastore.store(data, output);
             }
         }
@@ -251,10 +248,8 @@ public class DatastoreService implements IDatastoreService {
     private Path getOrCreateModuleDirectory(Path parentDir, Module module) throws IOException {
         Path directory = parentDir.resolve(module.getId());
 
-        File directoryFile = directory.toFile();
-
-        if (!directoryFile.exists() && !directoryFile.mkdirs()) {
-            throw new IOException("Failed to create module directory (" + directory.toString() + ")");
+        if (!Files.exists(directory)) {
+            Files.createDirectories(directory);
         }
 
         return directory;
@@ -273,10 +268,10 @@ public class DatastoreService implements IDatastoreService {
      */
     private Optional<Version> loadVersion(Path moduleDirectory, String datastoreKey) throws IOException {
         Version result = null;
-        File versionFile = moduleDirectory.resolve(VERSION_FILE).toFile();
+        Path versionPath = moduleDirectory.resolve(VERSION_FILE);
 
-        if (versionFile.exists()) {
-            try (Reader reader = new FileReader(versionFile)) {
+        if (Files.exists(versionPath)) {
+            try (Reader reader = Files.newBufferedReader(versionPath)) {
                 JsonElement versionElement = jsonParser.parse(reader)
                         .getAsJsonObject()
                         .get(datastoreKey);
@@ -302,21 +297,17 @@ public class DatastoreService implements IDatastoreService {
      *             If there is a file system I/O error storing the version
      */
     private void storeVersion(Path moduleDirectory, Version version, String datastoreKey) throws IOException {
-        File versionFile = moduleDirectory.resolve(VERSION_FILE).toFile();
+        Path versionPath = moduleDirectory.resolve(VERSION_FILE);
         JsonObject allVersions = null;
 
         // Load the JSON if it exists, otherwise initialize the representation
-        if (versionFile.exists()) {
-            try (Reader reader = new BufferedReader(new FileReader(versionFile))) {
+        if (Files.exists(versionPath)) {
+            try (Reader reader = Files.newBufferedReader(versionPath)) {
                 allVersions = jsonParser.parse(reader).getAsJsonObject();
             }
         } else {
-            if (versionFile.createNewFile()) {
-                allVersions = new JsonObject();
-            } else {
-                throw new IOException(
-                        "Failed to create datastore version file (" + versionFile.toPath().toString() + ")");
-            }
+            Files.createFile(versionPath);
+            allVersions = new JsonObject();
         }
 
         // Add/replace the entry
@@ -324,7 +315,7 @@ public class DatastoreService implements IDatastoreService {
         allVersions.add(datastoreKey, newVersion);
 
         // Write out to file
-        try (JsonWriter writer = gson.newJsonWriter(new FileWriter(versionFile, false))) {
+        try (JsonWriter writer = gson.newJsonWriter(Files.newBufferedWriter(versionPath))) {
             gson.toJson(allVersions, writer);
         }
     }
