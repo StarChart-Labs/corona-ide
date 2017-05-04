@@ -12,3 +12,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Basic documentation
 - Datastore APIs which allow storage and retrieval for data by modules
 - Application APIs which allow manipulation of IDE application instance data
+- Workspace and Project APIs for management of workspace data
+- Java FX based UI
