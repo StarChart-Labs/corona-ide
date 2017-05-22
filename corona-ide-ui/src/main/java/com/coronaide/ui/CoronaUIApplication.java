@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class CoronaUIApplication extends Application {
@@ -38,8 +39,9 @@ public class CoronaUIApplication extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = loader.load();
         Scene scene = new Scene(root, 1000, 500);
-        stage.setTitle("Corona IDE");
+        stage.setTitle("Corona");
         stage.setScene(scene);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
         stage.show();
     }
 

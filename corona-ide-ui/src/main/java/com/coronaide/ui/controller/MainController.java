@@ -26,6 +26,7 @@ import com.coronaide.core.service.IWorkspaceService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -67,6 +68,17 @@ public class MainController implements Initializable {
         List<String> projectNamesList = projectService.getAll().stream().map(Project::getName).collect(Collectors.toList());
         ObservableList<String> observableProjectNamesList = FXCollections.observableList(projectNamesList);
         listViewProjects.setItems(observableProjectNamesList);
+    }
+
+    @FXML
+    private void handleFileNewProject(ActionEvent event) {
+        // TODO: create new project
+        return;
+    }
+
+    @FXML
+    private void handleFileQuit(ActionEvent event) {
+        System.exit(0);
     }
 
 }
