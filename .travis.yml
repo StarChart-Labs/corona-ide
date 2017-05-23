@@ -1,25 +1,30 @@
 language: java
-  
+
 env:
   global:
     - secure: "FDnjZxwMSleFDTg430KpiTlFof1wU7FrCqFlwjJehbv3Wa4h610P9JgVYa2aeUQSwwXryTlzeTwy5z5PJBEJ/Z1zSqU8DioeSPGfCA9TeeR6fgkcyKvdDvXxzobWHjf0kHEihxXaHsXAeKNGevHr3sAaShy80Wip3baYW+kjKsTaQB6Zy7vVNQkAp5rtru4byCCKmUwNZmySxseUi8XOnHx1AWZSRUOD9Pr+zTL/K4fG/inF0WLRwAQr9nw2IqPIj/+v20UKyQkeaGMM8iPiWeSQLUYidsQrGWdSMF22mYqaIobN49MZyAAOzZs4AlRG8a/R/WdB+86ObL9YFnxSWtbONlslGR+vZkxVUQZLnaTHaIEMz/KpST0iXOt1OcZhJm9JFalbB3D+17wEu17mMtue7WhfvCZKPRItx3I38nhpof8NBJgQz4YmLkWKkNa5XNfaUWE6hnOqvc+iuNWMB9Dom4nBK75KyywT6Yw0KNqO+7W/X+6Q/9eJGYZkoyBnP37SdMcB5VJitsKjxhqSi15ZILlS5pBNRqCE2/CUxDd3DILIq6Oliq8pFiNj1Zxz/HuahJkMDDWVhFh0NXPx4IskX4GIeuDyd/Blvs9jDdz28WDGiqBovCBMsIaxjWI+RDuPjImicxj/NQtkW2GiqVm76LklOPzvI2PJrZMi1iU="
 
+sudo: required
+
 jdk:
   - oraclejdk8
-  
+
 before_install:
   - pip install --user codecov
-  
+
+install: true
+
 script:
+  - sudo apt-get update && sudo apt-get install oracle-java8-installer
   - ./gradlew check
   - ./gradlew codeCoverageReport
   - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
-  
+
 after_success:
   - codecov
   - ./gradlew createHubOutput
   - bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./build/blackduck/*_bdio.jsonld
-  
+
 notifications:
   email:
     recipients:
