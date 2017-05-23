@@ -10,6 +10,7 @@
  */
 package com.coronaide.ui.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
@@ -29,8 +31,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 
 /**
  * A controller for the simple JavaFX Scene
@@ -65,6 +71,10 @@ public class MainController implements Initializable {
 
         labelWorkspace
                 .setText(workingDir.getName(workingDir.getNameCount() - 2).toString());
+        showProjectList();
+    }
+
+    private void showProjectList() {
         List<String> projectNamesList = projectService.getAll().stream().map(Project::getName).collect(Collectors.toList());
         ObservableList<String> observableProjectNamesList = FXCollections.observableList(projectNamesList);
         listViewProjects.setItems(observableProjectNamesList);
@@ -72,13 +82,36 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleFileNewProject(ActionEvent event) {
-        // TODO: create new project
-        return;
+        TextInputDialog newProjectDialog = new TextInputDialog();
+        newProjectDialog.setTitle("Create Project");
+        newProjectDialog.setHeaderText("Create new project");
+        newProjectDialog.setContentText("Project name:");
+
+        newProjectDialog.showAndWait()
+                .ifPresent(r -> {
+                    Path projectPath = workspaceService.getActiveWorkspace().getWorkingDirectory().resolve(r);
+                    try {
+                        projectService.create(new ProjectRequest(projectPath));
+                        showProjectList();
+                    } catch (IOException e) {
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Create project failed");
+                        alert.setHeaderText("Failed to create new project.");
+                        alert.showAndWait();
+                        // TODO nickavv: create custom "stack trace dialog" to show the actual error
+                    }
+                });
     }
 
     @FXML
     private void handleFileQuit(ActionEvent event) {
-        System.exit(0);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Quit Corona");
+        alert.setContentText("Are you sure you want to quit?");
+
+        alert.showAndWait()
+                .filter(r -> r == ButtonType.OK)
+                .ifPresent(r -> System.exit(0));
     }
 
 }
