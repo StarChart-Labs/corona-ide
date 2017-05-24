@@ -131,9 +131,11 @@ public class MainController implements Initializable {
             Stage dialogStage = new Stage();
             dialogStage.setTitle("About Corona IDE");
             dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.setResizable(false);
             dialogStage.initOwner(CoronaUIApplication.getPrimaryStage());
             Scene scene = new Scene(pane);
             dialogStage.setScene(scene);
+            dialogStage.sizeToScene();
 
             // Set the person into the controller.
             AboutDialogController controller = loader.getController();
