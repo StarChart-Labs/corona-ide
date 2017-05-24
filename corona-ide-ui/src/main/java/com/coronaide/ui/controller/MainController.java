@@ -31,12 +31,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * A controller for the simple JavaFX Scene
@@ -112,6 +117,33 @@ public class MainController implements Initializable {
         alert.showAndWait()
                 .filter(r -> r == ButtonType.OK)
                 .ifPresent(r -> System.exit(0));
+    }
+
+    @FXML
+    private void handleAboutHelp(ActionEvent event) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(CoronaUIApplication.class.getResource("/fxml/AboutDialog.fxml"));
+            DialogPane pane = (DialogPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("About Corona IDE");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(CoronaUIApplication.getPrimaryStage());
+            Scene scene = new Scene(pane);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            AboutDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
