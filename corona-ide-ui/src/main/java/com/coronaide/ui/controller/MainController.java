@@ -25,6 +25,7 @@ import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
+import com.coronaide.ui.CoronaUIApplication;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +35,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 
@@ -51,9 +51,6 @@ public class MainController implements Initializable {
     private IProjectService projectService;
 
     @FXML
-    private Label labelWorkspace;
-
-    @FXML
     private ListView<String> listViewProjects;
 
     @Inject
@@ -64,18 +61,21 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        Objects.requireNonNull(workspaceService);
-
-        Workspace workspace = workspaceService.getActiveWorkspace();
-        Path workingDir = workspace.getWorkingDirectory();
-
-        labelWorkspace
-                .setText(workingDir.getName(workingDir.getNameCount() - 2).toString());
+        prepareWorkspace();
         showProjectList();
     }
 
+    private void prepareWorkspace() {
+        Workspace workspace = workspaceService.getActiveWorkspace();
+        Path workingDir = workspace.getWorkingDirectory();
+
+        CoronaUIApplication.getPrimaryStage()
+                .setTitle(workingDir.getName(workingDir.getNameCount() - 2).toString() + " - Corona");
+    }
+
     private void showProjectList() {
-        List<String> projectNamesList = projectService.getAll().stream().map(Project::getName).collect(Collectors.toList());
+        List<String> projectNamesList = projectService.getAll().stream().map(Project::getName)
+                .collect(Collectors.toList());
         ObservableList<String> observableProjectNamesList = FXCollections.observableList(projectNamesList);
         listViewProjects.setItems(observableProjectNamesList);
     }

@@ -23,6 +23,8 @@ import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.main.config.CoronaIdeMainConfiguration;
 import com.coronaide.ui.CoronaUIApplication;
 
+import javafx.application.Application;
+
 /**
  * Entry point for the IDE, started as per standard Java application patterns
  *
@@ -69,7 +71,8 @@ public class Main {
             coreConfiguration.setLocations(Paths.get(applicationDirectory), Paths.get(workspaceDirectory));
 
             logger.info("Running in workspace {} from {}", workspaceDirectory, applicationDirectory);
-            CoronaUIApplication.launchUi(context);
+            CoronaUIApplication.setSpringContext(context);
+            Application.launch(CoronaUIApplication.class);
         }
     }
 
