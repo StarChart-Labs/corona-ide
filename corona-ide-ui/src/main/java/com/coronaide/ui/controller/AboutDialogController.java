@@ -19,7 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 
 /**
- * A controller for the Help > About dialog
+ * A controller for the Help &gt; About dialog
  * 
  * @author nickavv
  * @since 0.1.0
