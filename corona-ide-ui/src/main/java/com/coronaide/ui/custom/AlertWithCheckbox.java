@@ -28,8 +28,6 @@ public class AlertWithCheckbox extends Alert {
      *            What type of alert dialog to display
      * @param label
      *            A text label to display next to the checkbox
-     * @param handler
-     *            A callback function to run when the checkbox's value changes
      * @param buttons
      *            A varargs array of buttons to display in the Alert
      * @since 0.1.0

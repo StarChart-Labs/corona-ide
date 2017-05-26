@@ -37,10 +37,10 @@ public class ProjectListTest extends CoronaUITest {
     @Test
     public void projectListTest() {
         List<String> projectNamesList = testProjects.stream().map(Project::getName).collect(Collectors.toList());
-        ListView<String> listViewProjects = lookup("#listViewProjects").query();
+        ListView<Project> listViewProjects = lookup("#listViewProjects").query();
         Assert.assertEquals(2, listViewProjects.getItems().size());
-        for (String projectName : listViewProjects.getItems()) {
-            Assert.assertTrue(projectNamesList.contains(projectName));
+        for (Project project : listViewProjects.getItems()) {
+            Assert.assertTrue(projectNamesList.contains(project.getName()));
         }
     }
 
