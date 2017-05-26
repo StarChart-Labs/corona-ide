@@ -4,6 +4,7 @@ task run (type: JavaExec){
     
     main = 'com.coronaide.main.Main'
     classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = [ "-Xdebug", "-agentlib:jdwp=transport=dt_socket,address=9000,server=y,suspend=n" ]
     args = [ "--applicationDirectory", "${applicationDirectory}", "--workspaceDirectory", "${workspaceDirectory}" ]
     
 }

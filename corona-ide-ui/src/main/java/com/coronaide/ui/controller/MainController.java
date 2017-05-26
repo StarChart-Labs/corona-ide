@@ -26,7 +26,7 @@ import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.ui.CoronaUIApplication;
-import com.coronaide.ui.custom.AlertWithCheckbox;
+import com.coronaide.ui.custom.ProjectListCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,11 +38,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -86,46 +83,7 @@ public class MainController implements Initializable {
         List<Project> projectsList = projectService.getAll().stream().collect(Collectors.toList());
         ObservableList<Project> observableProjectsList = FXCollections.observableList(projectsList);
 
-        listViewProjects.setCellFactory(listView -> new ListCell<Project>() {
-            @Override
-            protected void updateItem(Project item, boolean empty) {
-                super.updateItem(item, empty);
-                if (!empty) {
-                    setText(item.getName());
-
-                    ContextMenu contextMenu = new ContextMenu();
-                    MenuItem menuDelete = new MenuItem();
-                    menuDelete.setText("Delete");
-                    menuDelete.setOnAction(event -> {
-                        AlertWithCheckbox alert = new AlertWithCheckbox(AlertType.CONFIRMATION,
-                                "Also delete files from disk (cannot be undone)", ButtonType.YES);
-                        alert.setTitle("Delete Project");
-                        alert.setContentText("Do you want to remove " + item.getName() + " from your workspace?");
-
-                        alert.showAndWait()
-                                .filter(r -> r == ButtonType.YES)
-                                .ifPresent(r -> {
-                                    try {
-                                        if (alert.isChecked()) {
-                                            projectService.delete(item);
-                                        } else {
-                                            projectService.remove(item);
-                                        }
-                                        showProjectList();
-                                    } catch (IOException e) {
-                                        Alert errorAlert = new Alert(AlertType.ERROR);
-                                        errorAlert.setTitle("Delete project failed");
-                                        errorAlert.setHeaderText("Failed to delete project.");
-                                        errorAlert.showAndWait();
-                                        // TODO nickavv: create custom "stack trace dialog" to show the actual error
-                                    }
-                                });
-                    });
-                    contextMenu.getItems().addAll(menuDelete);
-                    setContextMenu(contextMenu);
-                }
-            }
-        });
+        listViewProjects.setCellFactory(listView -> new ProjectListCell(projectService, observableProjectsList));
 
         listViewProjects.setItems(observableProjectsList);
     }
@@ -141,8 +99,7 @@ public class MainController implements Initializable {
                 .ifPresent(r -> {
                     Path projectPath = workspaceService.getActiveWorkspace().getWorkingDirectory().resolve(r);
                     try {
-                        projectService.create(new ProjectRequest(projectPath));
-                        showProjectList();
+                        listViewProjects.getItems().add(projectService.create(new ProjectRequest(projectPath)));
                     } catch (IOException e) {
                         Alert alert = new Alert(AlertType.ERROR);
                         alert.setTitle("Create project failed");
