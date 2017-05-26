@@ -155,7 +155,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleFileQuit(ActionEvent event) {
-        AlertWithCheckbox alert = new AlertWithCheckbox(AlertType.CONFIRMATION, "Don't ask again", ButtonType.OK);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Quit Corona");
         alert.setContentText("Are you sure you want to quit?");
 
