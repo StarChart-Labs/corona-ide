@@ -13,6 +13,7 @@ package com.coronaide.core.service.impl;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import com.coronaide.core.internal.datastore.util.Datastores;
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IWorkspaceService;
@@ -41,8 +42,8 @@ public class WorkspaceService implements IWorkspaceService {
 
     @Override
     public Workspace getActiveWorkspace() {
-        Path workspaceWorkingDirectory = coreConfiguration.getActiveWorkspaceDirectory()
-                .resolve(coreConfiguration.getWorkingDirectoryName());
+        Path workspaceWorkingDirectory = Datastores
+                .getMetaDataDirectory(coreConfiguration.getActiveWorkspaceDirectory());
 
         return new Workspace(workspaceWorkingDirectory);
     }

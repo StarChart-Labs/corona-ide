@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.internal.datastore.util.Datastores;
 import com.coronaide.core.internal.service.impl.CoreConfiguration;
 
 /**
@@ -36,25 +37,17 @@ public class CoreConfigurationTest {
     }
 
     @Test
-    public void getWorkingDirectoryName() throws Exception {
-        Path workingDirectoryName = coreConfiguration.getWorkingDirectoryName();
-
-        Assert.assertEquals(workingDirectoryName.toString(), ".corona-ide");
-    }
-
-    @Test
     public void getApplicationWorkingDirectory() throws Exception {
-        Path workingDirectoryName = coreConfiguration.getWorkingDirectoryName();
-        Path applicationDirectory = coreConfiguration.getApplicationWorkingDirectory();
+        Path applicationDirectory = coreConfiguration.getApplicationMetaDataDirectory();
 
-        Assert.assertEquals(applicationDirectory.toString(), applicationDir.resolve(workingDirectoryName).toString());
+        Assert.assertEquals(applicationDirectory, Datastores.getMetaDataDirectory(applicationDir));
     }
 
     @Test
     public void getActiveWorkspaceDirectory() throws Exception {
         Path workspaceDirectory = coreConfiguration.getActiveWorkspaceDirectory();
 
-        Assert.assertEquals(workspaceDirectory.toString(), workspaceDir.toString());
+        Assert.assertEquals(workspaceDirectory, workspaceDir);
     }
 
 }

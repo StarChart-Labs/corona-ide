@@ -30,7 +30,6 @@ import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.internal.datastore.impl.Datastores;
 import com.coronaide.core.internal.datastore.impl.ProjectLocation;
 import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
-import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
@@ -46,9 +45,6 @@ public class ProjectServiceErrorTest {
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceErrorTest.class);
 
     @Mock
-    private ICoreConfiguration coreConfiguration;
-
-    @Mock
     private IWorkspaceService workspaceService;
 
     @Mock
@@ -60,31 +56,25 @@ public class ProjectServiceErrorTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        projectService = new ProjectService(coreConfiguration, workspaceService, datastoreService);
+        projectService = new ProjectService(workspaceService, datastoreService);
     }
 
     @AfterMethod
     public void tearDown(ITestResult result) {
         logger.trace("Verifying mock interactions for {}", result);
 
-        Mockito.verifyNoMoreInteractions(coreConfiguration,
-                workspaceService,
+        Mockito.verifyNoMoreInteractions(workspaceService,
                 datastoreService);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void createNullCoreConfiguration() throws Exception {
-        new ProjectService(null, workspaceService, datastoreService);
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
     public void createNullWorkspaceService() throws Exception {
-        new ProjectService(coreConfiguration, null, datastoreService);
+        new ProjectService(null, datastoreService);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullDatastoreService() throws Exception {
-        new ProjectService(coreConfiguration, workspaceService, null);
+        new ProjectService(workspaceService, null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)

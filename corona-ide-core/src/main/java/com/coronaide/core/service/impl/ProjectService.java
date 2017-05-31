@@ -25,10 +25,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.Datastores;
 import com.coronaide.core.internal.datastore.impl.ProjectLocation;
 import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
-import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.core.internal.datastore.util.Datastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
@@ -43,28 +42,22 @@ import com.coronaide.core.service.IWorkspaceService;
  * obtain an instance of {@link IProjectService} instead
  *
  * @author romeara
- * @since 0.1
+ * @since 0.1.0
  */
 public class ProjectService implements IProjectService {
-
-    private final ICoreConfiguration coreConfiguration;
 
     private final IWorkspaceService workspaceService;
 
     private final IDatastoreService datastoreService;
 
     /**
-     * @param coreConfiguration
-     *            APIs with core Corona IDE data access
      * @param workspaceService
      *            API which allows access to the workspace data
      * @param datastoreService
      *            API which handles loading and storing data from persistent storage
-     * @since 0.1
+     * @since 0.1.0
      */
-    public ProjectService(ICoreConfiguration coreConfiguration, IWorkspaceService workspaceService,
-            IDatastoreService datastoreService) {
-        this.coreConfiguration = Objects.requireNonNull(coreConfiguration);
+    public ProjectService(IWorkspaceService workspaceService, IDatastoreService datastoreService) {
         this.workspaceService = Objects.requireNonNull(workspaceService);
         this.datastoreService = Objects.requireNonNull(datastoreService);
     }
@@ -75,7 +68,8 @@ public class ProjectService implements IProjectService {
 
         Workspace workspace = workspaceService.getActiveWorkspace();
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
+                .getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 
@@ -98,21 +92,21 @@ public class ProjectService implements IProjectService {
 
         datastoreService.store(workspace, module, datastore, new WorkspaceMetaData(locations));
 
-        return toProject(projectLocation, coreConfiguration.getWorkingDirectoryName());
+        return toProject(projectLocation);
     }
 
     @Override
     public Collection<Project> getAll() {
         Workspace workspace = workspaceService.getActiveWorkspace();
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
-        Path workingDirectoryName = coreConfiguration.getWorkingDirectoryName();
+        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
+                .getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 
         return workspaceData.map(WorkspaceMetaData::getProjectLocations)
                 .orElse(Collections.emptySet()).stream()
-                .map(input -> toProject(input, workingDirectoryName))
+                .map(this::toProject)
                 .collect(Collectors.toList());
     }
 
@@ -152,7 +146,8 @@ public class ProjectService implements IProjectService {
         Objects.requireNonNull(project);
 
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
+                .getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 
@@ -193,18 +188,15 @@ public class ProjectService implements IProjectService {
     /**
      * @param projectLocation
      *            Root location of the project
-     * @param workingDirectoryName
-     *            Working directory name for any Corona IDE data files
      * @return A project representation
      */
-    private Project toProject(ProjectLocation projectLocation, Path workingDirectoryName) {
+    private Project toProject(ProjectLocation projectLocation) {
         Objects.requireNonNull(projectLocation);
-        Objects.requireNonNull(workingDirectoryName);
 
         Path location = Paths.get(projectLocation.getRootDirectory());
 
         String name = location.getFileName().toString();
-        Path workingDirectory = location.resolve(workingDirectoryName);
+        Path workingDirectory = Datastores.getMetaDataDirectory(location);
 
         return new Project(name, location, workingDirectory);
     }

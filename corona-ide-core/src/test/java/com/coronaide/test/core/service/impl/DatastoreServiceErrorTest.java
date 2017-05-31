@@ -15,10 +15,15 @@ import java.nio.file.Paths;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.Datastore;
+import com.coronaide.core.internal.service.IDatastoreManager;
 import com.coronaide.core.model.Application;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Version;
@@ -32,6 +37,12 @@ import com.coronaide.core.service.impl.DatastoreService;
  * @author romeara
  */
 public class DatastoreServiceErrorTest {
+
+    /** Logger reference to output information to the application log files */
+    private static final Logger logger = LoggerFactory.getLogger(DatastoreServiceErrorTest.class);
+
+    @Mock
+    private IDatastoreManager datastoreManager;
 
     @Mock
     private Module module;
@@ -55,7 +66,14 @@ public class DatastoreServiceErrorTest {
         application = new Application(Paths.get("app-dir"));
         workspace = new Workspace(Paths.get("workspace-dir"));
 
-        datastoreService = new DatastoreService();
+        datastoreService = new DatastoreService(datastoreManager);
+    }
+
+    @AfterMethod
+    public void tearDown(ITestResult result) {
+        logger.trace("Verifying mock interactions for {}", result);
+
+        Mockito.verifyNoMoreInteractions(datastoreManager);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
