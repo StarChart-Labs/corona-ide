@@ -29,7 +29,7 @@
                </font>
             </Label>
             <Label alignment="TOP_LEFT" layoutX="27.0" layoutY="50.0" prefHeight="117.0" prefWidth="314.0" text="Copyright (c) 2017 Corona IDE all rights reserved&#10;&#10;Corona is currently pre-release software. Thank you for your help testing and developing it.&#10;" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
-            <Button layoutX="224.0" layoutY="132.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="108.0" text="You're Welcome" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Button layoutX="224.0" layoutY="132.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="108.0" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
    </content>

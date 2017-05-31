@@ -27,7 +27,7 @@ public class CreateProjectTest extends CoronaUITest {
     }
 
     @Test
-    public void projectListTest() {
+    public void createProjectTest() {
         clickOn("#menu-file").clickOn("#menu-file-new-project");
         write(TEST_PROJECT_NAME);
         clickOn("OK");

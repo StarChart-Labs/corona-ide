@@ -52,6 +52,7 @@ public class AlertWithCheckbox extends Alert {
             @Override
             protected Node createDetailsButton() {
                 CheckBox checkbox = new CheckBox();
+                checkbox.setId("alertCheckbox");
                 checkbox.setText(label);
                 checkbox.setOnAction(e -> checked = checkbox.isSelected());
                 return checkbox;
