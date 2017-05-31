@@ -11,12 +11,17 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.testfx.api.FxRobotContext;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.service.query.PointQuery;
 
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.test.ui.config.UITestConfiguration;
 import com.coronaide.ui.CoronaUIApplication;
 
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,6 +32,13 @@ public abstract class CoronaUITest extends ApplicationTest implements Applicatio
     protected static ApplicationContext springContext;
 
     private static boolean initialized = false;
+
+    private final FxRobotContext context;
+
+    public CoronaUITest() {
+        context = new FxRobotContext();
+        context.setPointPosition(Pos.CENTER);
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -50,6 +62,14 @@ public abstract class CoronaUITest extends ApplicationTest implements Applicatio
             CoronaUIApplication.setSpringContext(springContext);
             initialized = true;
         }
+    }
+
+    @Override
+    public PointQuery point(Node node) {
+        Point2D topLeftPoint = node.localToScreen(0, 0);
+        Point2D pos = new Point2D(topLeftPoint.getX(), topLeftPoint.getY());
+
+        return super.point(node).atOffset(pos);
     }
 
 }
