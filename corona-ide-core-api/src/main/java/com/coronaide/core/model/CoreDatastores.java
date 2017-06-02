@@ -8,7 +8,7 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  */
-package com.coronaide.core.internal.datastore.impl;
+package com.coronaide.core.model;
 
 import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.datastore.JsonDatastore;
@@ -19,7 +19,7 @@ import com.coronaide.core.datastore.JsonDatastore;
  * @author romeara
  * @since 0.1
  */
-public final class Datastores {
+public final class CoreDatastores {
 
     private static final Datastore<WorkspaceMetaData> WORKSPACE_DATASTORE = new JsonDatastore<>("metadata",
             WorkspaceMetaData.class);
@@ -27,7 +27,7 @@ public final class Datastores {
     /**
      * Prevent instantiation of utility class
      */
-    private Datastores() throws InstantiationException {
+    private CoreDatastores() throws InstantiationException {
         throw new InstantiationException("Cannot instantiate instance of utility class '" + getClass().getName() + "'");
     }
 

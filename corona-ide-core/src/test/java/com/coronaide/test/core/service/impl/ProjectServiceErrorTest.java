@@ -27,14 +27,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.Datastores;
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
-import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
+import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
+import com.coronaide.core.model.WorkspaceMetaData;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.core.service.impl.ProjectService;
@@ -88,7 +88,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(
                 Collections.singleton(new ProjectLocation(projectRoot.toString())));
 
@@ -115,7 +115,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
@@ -141,7 +141,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);

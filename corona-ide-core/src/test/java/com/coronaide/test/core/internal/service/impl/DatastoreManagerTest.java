@@ -8,7 +8,7 @@
  * Contributors:
  *    "romeara" - initial API and implementation and/or initial documentation
  */
-package com.coronaide.test.core.internal.datastore.impl;
+package com.coronaide.test.core.internal.service.impl;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

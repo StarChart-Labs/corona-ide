@@ -25,14 +25,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
-import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
 import com.coronaide.core.internal.datastore.util.Datastores;
+import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
+import com.coronaide.core.model.WorkspaceMetaData;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
@@ -68,8 +69,7 @@ public class ProjectService implements IProjectService {
 
         Workspace workspace = workspaceService.getActiveWorkspace();
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 
@@ -99,8 +99,7 @@ public class ProjectService implements IProjectService {
     public Collection<Project> getAll() {
         Workspace workspace = workspaceService.getActiveWorkspace();
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 
@@ -146,8 +145,7 @@ public class ProjectService implements IProjectService {
         Objects.requireNonNull(project);
 
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
 

@@ -31,14 +31,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
-import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
 import com.coronaide.core.internal.datastore.util.Datastores;
+import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
+import com.coronaide.core.model.WorkspaceMetaData;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.core.service.impl.ProjectService;
@@ -78,7 +79,7 @@ public class ProjectServiceTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
+        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.model.CoreDatastores
                 .getWorkspaceDatastore();
         WorkspaceMetaData expectedData = new WorkspaceMetaData(
                 Collections.singleton(new ProjectLocation(projectRoot.toString())));
@@ -116,8 +117,7 @@ public class ProjectServiceTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
         WorkspaceMetaData expectedData = new WorkspaceMetaData(expectedLocations);
 
@@ -143,8 +143,7 @@ public class ProjectServiceTest {
     public void getAllNoWorkspaceMetaData() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.empty());
@@ -162,8 +161,7 @@ public class ProjectServiceTest {
     public void getAllExistingWorkspaceMetaData() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Paths.get("other");
         ProjectLocation existingLocation = new ProjectLocation(projectRoot.toString());
@@ -194,8 +192,7 @@ public class ProjectServiceTest {
     public void remove() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Files.createTempFile("projectService", "-create");
         projectRoot.toFile().deleteOnExit();
@@ -226,8 +223,7 @@ public class ProjectServiceTest {
     public void delete() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.internal.datastore.impl.Datastores
-                .getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Files.createTempFile("projectService", "-create");
         projectRoot.toFile().deleteOnExit();
