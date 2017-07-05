@@ -1,14 +1,10 @@
 buildscript {
     repositories {
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-            mavenCentral()
-            maven { url 'http://jcenter.bintray.com' }
-        }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath group: 'com.netflix.nebula', name: 'nebula-dependency-recommender', version: '3.6.3'
-        classpath group: 'com.blackducksoftware.integration', name: 'hub-gradle-plugin', version: '3.4.1'
+        classpath group: 'org.starchartlabs.flare', name: 'flare-operations-plugins', version: '0.1.0'
     }
 }
 
@@ -17,7 +13,7 @@ plugins {
     id 'org.sonarqube' version '2.3'
 }
 
-apply plugin: 'com.blackducksoftware.hub'
+apply plugin: 'org.starchartlabs.flare.merge-coverage-reports'
 
 sonarqube {
     properties {
@@ -68,16 +64,11 @@ allprojects{
         mavenCentral()
     }
 
-    //Task which will show what the dependency set of the project is in a tree form
-    task dependencyReport(type: DependencyReportTask) {}
-
-    //Task which will show what is introducing a particular dependency
-    task dependencyInsightReport(type: DependencyInsightReportTask) {}
-
 }
 
 subprojects{
     apply plugin: 'maven'
+    apply plugin: 'org.starchartlabs.flare.increase-test-logging'
 
     //Configure test support sources, which can be re-used by importing projects
     configurations {
@@ -134,22 +125,6 @@ subprojects{
 
     //Setup default test behavior, including failure logging
     test {
-        testLogging {
-            exceptionFormat 'full'
-
-            quiet {
-                events 'failed'
-            }
-
-            info {
-                events 'skipped', 'failed', 'passed'
-            }
-
-            debug {
-                events 'started', 'standard_out', 'standard_error', 'skipped', 'failed', 'passed'
-            }
-        }
-
         useTestNG() {
             useDefaultListeners = true
         }
@@ -165,26 +140,6 @@ subprojects{
         }
     }
 
-}
-
-//Create an aggregated jacoco report
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/report.xml"
-        html.enabled false
-        csv.enabled false
-    }
-}
-
-codeCoverageReport.dependsOn {
-    subprojects*.test
 }
 
 task wrapper(type: Wrapper) {

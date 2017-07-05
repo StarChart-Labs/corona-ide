@@ -12,14 +12,11 @@ jdk:
 before_install:
   - pip install --user codecov
 
-script:
-  - ./gradlew check
-  - ./gradlew codeCoverageReport
-  - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
-
 after_success:
   - codecov
-  - ./gradlew createHubOutput
+  - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
+  - curl https://copilot.blackducksoftware.com/scripts/init/gradle -o bds_init.gradle
+  - ./gradlew --init-script bds_init.gradle buildBom -DbdsPluginVersion=5.0.2
   - bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./build/blackduck/*_bdio.jsonld
 
 notifications:
