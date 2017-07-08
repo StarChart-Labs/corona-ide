@@ -17,14 +17,8 @@ Corona IDE is currently written against Java 1.8. Testing use the TestNG framewo
 
 ## Development Environment Setup
 
-Until Corona IDE reaches general availability with required features, it will be developed within Eclipse. It is recommended to create an isolated workspace for Corona IDE. You should also import the standard Corona IDE formatting and save settings from eclipseConfiguration:
-
-- `Java > CodeStyle > Cleanup` is imported from cleanup.xml
-- `Java > CodeStyle > Formatter` is imported from codeformatter.xml
-- `Java > CodeStyle > Code Templates` is imported from codetemplates.xml
-
-It is also recommended to turn on "save actions", under the Java Editor settings, to format saved lines and perform other cleanup operations
+Until Corona IDE reaches general availability with required features, it will be developed within Eclipse. It is recommended to create an isolated workspace for StarChart Labs projects. You should also import the standard formatting and save settings from the [eclipse-configuration repository](https://github.com/StarChart-Labs/eclipse-configuration)
 
 You will also need to install the Eclipse plugin [e(fx)clipse](http://www.eclipse.org/efxclipse/index.html).
 
-Once settings are configured, use the Eclipse Gradle IDE plug-in (we are currently using STS) to import all projects from the root of the repository
+Once settings are configured, use the Eclipse Gradle IDE plug-in (we are currently using Buildship) to import all projects from the root of the repository
