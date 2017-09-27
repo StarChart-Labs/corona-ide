@@ -31,8 +31,9 @@ public class CreateProjectTest extends CoronaUITest {
         clickOn("#menu-file").clickOn("#menu-file-new-project");
         write(TEST_PROJECT_NAME);
         clickOn("OK");
-        Assert.assertTrue(projectService.getAll().stream().map(Project::getName).collect(Collectors.toList())
-                .contains(TEST_PROJECT_NAME));
+        Assert.assertTrue("Expected newly created project to be found in project list.",
+                projectService.getAll().stream().map(Project::getName).collect(Collectors.toList())
+                        .contains(TEST_PROJECT_NAME));
     }
 
     @After

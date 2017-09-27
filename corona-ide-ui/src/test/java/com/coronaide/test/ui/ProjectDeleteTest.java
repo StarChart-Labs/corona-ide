@@ -40,9 +40,10 @@ public class ProjectDeleteTest extends CoronaUITest {
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
         clickOn("testProject", MouseButton.SECONDARY).clickOn("Delete").clickOn("Yes");
         listViewProjects = lookup("#listViewProjects").query();
-        Assert.assertTrue(listViewProjects.getItems().stream()
-                .filter(p -> p.getName().equals("testProject"))
-                .collect(Collectors.toList()).isEmpty());
+        Assert.assertTrue("Expected project list to not contain project which was deleted.",
+                listViewProjects.getItems().stream()
+                        .filter(p -> p.getName().equals("testProject"))
+                        .collect(Collectors.toList()).isEmpty());
     }
 
     @Test
@@ -50,9 +51,10 @@ public class ProjectDeleteTest extends CoronaUITest {
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
         clickOn("testProject2", MouseButton.SECONDARY).clickOn("Delete").clickOn("#alertCheckbox").clickOn("Yes");
         listViewProjects = lookup("#listViewProjects").query();
-        Assert.assertTrue(listViewProjects.getItems().stream()
-                .filter(p -> p.getName().equals("testProject2"))
-                .collect(Collectors.toList()).isEmpty());
+        Assert.assertTrue("Expected project list to not contain project which was deleted.",
+                listViewProjects.getItems().stream()
+                        .filter(p -> p.getName().equals("testProject2"))
+                        .collect(Collectors.toList()).isEmpty());
     }
 
     @After

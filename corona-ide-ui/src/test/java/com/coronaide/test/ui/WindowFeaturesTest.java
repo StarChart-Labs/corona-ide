@@ -27,7 +27,8 @@ public class WindowFeaturesTest extends CoronaUITest {
         Workspace workspace = workspaceService.getActiveWorkspace();
         Path workingDir = workspace.getWorkingDirectory();
 
-        Assert.assertEquals(CoronaUIApplication.getPrimaryStage().getTitle(),
+        Assert.assertEquals("Expected application title bar to have the correct title.",
+                CoronaUIApplication.getPrimaryStage().getTitle(),
                 workingDir.getName(workingDir.getNameCount() - 2).toString() + " - Corona");
     }
 

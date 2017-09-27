@@ -40,7 +40,8 @@ public class ProjectListTest extends CoronaUITest {
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
         Assert.assertEquals(2, listViewProjects.getItems().size());
         for (Project project : listViewProjects.getItems()) {
-            Assert.assertTrue(projectNamesList.contains(project.getName()));
+            Assert.assertTrue("Expected the correct number of projects to be in the projects list.",
+                    projectNamesList.contains(project.getName()));
         }
     }
 
