@@ -38,23 +38,31 @@ public class ProjectDeleteTest extends CoronaUITest {
     @Test
     public void projectRemoveTest() {
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
+        Assert.assertTrue("Expected project list to contain project which will be deleted.",
+                listViewProjects.getItems().stream()
+                        .filter(p -> p.getName().equals("testProject"))
+                        .findAny().isPresent());
         clickOn("testProject", MouseButton.SECONDARY).clickOn("Delete").clickOn("Yes");
         listViewProjects = lookup("#listViewProjects").query();
         Assert.assertTrue("Expected project list to not contain project which was deleted.",
                 listViewProjects.getItems().stream()
-                        .filter(p -> p.getName().equals("testProject"))
-                        .collect(Collectors.toList()).isEmpty());
+                .filter(p -> p.getName().equals("testProject"))
+                .collect(Collectors.toList()).isEmpty());
     }
 
     @Test
     public void projectDeleteTest() {
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
+        Assert.assertTrue("Expected project list to contain project which will be deleted.",
+                listViewProjects.getItems().stream()
+                .filter(p -> p.getName().equals("testProject2"))
+                .findAny().isPresent());
         clickOn("testProject2", MouseButton.SECONDARY).clickOn("Delete").clickOn("#alertCheckbox").clickOn("Yes");
         listViewProjects = lookup("#listViewProjects").query();
         Assert.assertTrue("Expected project list to not contain project which was deleted.",
                 listViewProjects.getItems().stream()
-                        .filter(p -> p.getName().equals("testProject2"))
-                        .collect(Collectors.toList()).isEmpty());
+                .filter(p -> p.getName().equals("testProject2"))
+                .collect(Collectors.toList()).isEmpty());
     }
 
     @After
