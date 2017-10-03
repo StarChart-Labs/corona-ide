@@ -16,6 +16,8 @@ import com.coronaide.core.model.Project;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.ui.CoronaUIApplication;
 
+import javafx.scene.control.ListView;
+
 public class CreateProjectTest extends CoronaUITest {
 
     @Inject
@@ -34,7 +36,8 @@ public class CreateProjectTest extends CoronaUITest {
         write(TEST_PROJECT_NAME);
         clickOn("OK");
 
-        Collection<String> projectNames = projectService.getAll().stream()
+        ListView<Project> listViewProjects = lookup("#listViewProjects").query();
+        Collection<String> projectNames = listViewProjects.getItems().stream()
                 .map(Project::getName)
                 .collect(Collectors.toList());
 
