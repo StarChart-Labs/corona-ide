@@ -1,6 +1,8 @@
 package com.coronaide.test.ui;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -31,22 +33,30 @@ public class CreateProjectTest extends CoronaUITest {
         clickOn("#menu-file").clickOn("#menu-file-new-project");
         write(TEST_PROJECT_NAME);
         clickOn("OK");
-        Assert.assertTrue("Expected newly created project to be found in project list.",
-                projectService.getAll().stream().map(Project::getName).collect(Collectors.toList())
-                        .contains(TEST_PROJECT_NAME));
+
+        Collection<String> projectNames = projectService.getAll().stream()
+                .map(Project::getName)
+                .collect(Collectors.toList());
+
+        boolean found = projectNames.stream()
+                .filter(Predicate.isEqual(TEST_PROJECT_NAME))
+                .findAny()
+                .isPresent();
+
+        Assert.assertTrue("Expected newly created project to be found in project list (" + projectNames + ")", found);
     }
 
     @After
     public void teardown() {
         projectService.getAll().stream()
-                .filter(p -> TEST_PROJECT_NAME.equals(p.getName()))
-                .forEach(p -> {
-                    try {
-                        projectService.delete(p);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+        .filter(p -> TEST_PROJECT_NAME.equals(p.getName()))
+        .forEach(p -> {
+            try {
+                projectService.delete(p);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }
