@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.coronaide.core.model.Project;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
@@ -46,11 +49,14 @@ import javafx.stage.Stage;
 
 /**
  * A controller for the simple JavaFX Scene
- * 
+ *
  * @author nickavv
  * @since 0.1.0
  */
 public class MainController implements Initializable {
+
+    /** Logger reference to output information to the application log files */
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     private IWorkspaceService workspaceService;
 
@@ -76,7 +82,7 @@ public class MainController implements Initializable {
         Path workingDir = workspace.getWorkingDirectory();
 
         CoronaUIApplication.getPrimaryStage()
-                .setTitle(workingDir.getName(workingDir.getNameCount() - 2).toString() + " - Corona");
+        .setTitle(workingDir.getName(workingDir.getNameCount() - 2).toString() + " - Corona");
     }
 
     private void showProjectList() {
@@ -96,18 +102,20 @@ public class MainController implements Initializable {
         newProjectDialog.setContentText("Project name:");
 
         newProjectDialog.showAndWait()
-                .ifPresent(r -> {
-                    Path projectPath = workspaceService.getActiveWorkspace().getWorkingDirectory().resolve(r);
-                    try {
-                        listViewProjects.getItems().add(projectService.create(new ProjectRequest(projectPath)));
-                    } catch (IOException e) {
-                        Alert alert = new Alert(AlertType.ERROR);
-                        alert.setTitle("Create project failed");
-                        alert.setHeaderText("Failed to create new project.");
-                        alert.showAndWait();
-                        // TODO nickavv: create custom "stack trace dialog" to show the actual error
-                    }
-                });
+        .ifPresent(r -> {
+            Path projectPath = workspaceService.getActiveWorkspace().getWorkingDirectory().resolve(r);
+            try {
+                logger.info("TEST DEBUG: Resolved: {}", r);
+
+                listViewProjects.getItems().add(projectService.create(new ProjectRequest(projectPath)));
+            } catch (IOException e) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Create project failed");
+                alert.setHeaderText("Failed to create new project.");
+                alert.showAndWait();
+                // TODO nickavv: create custom "stack trace dialog" to show the actual error
+            }
+        });
     }
 
     @FXML
@@ -117,8 +125,8 @@ public class MainController implements Initializable {
         alert.setContentText("Are you sure you want to quit?");
 
         alert.showAndWait()
-                .filter(r -> r == ButtonType.OK)
-                .ifPresent(r -> System.exit(0));
+        .filter(r -> r == ButtonType.OK)
+        .ifPresent(r -> System.exit(0));
     }
 
     @FXML
