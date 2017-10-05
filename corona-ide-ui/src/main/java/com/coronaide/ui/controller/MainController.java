@@ -105,7 +105,7 @@ public class MainController implements Initializable {
         .ifPresent(r -> {
             Path projectPath = workspaceService.getActiveWorkspace().getWorkingDirectory().resolve(r);
             try {
-                logger.info("TEST DEBUG: Resolved: {}", r);
+                        System.out.println("TEST DEBUG: Resolved: " + r + " to " + projectPath);
 
                 listViewProjects.getItems().add(projectService.create(new ProjectRequest(projectPath)));
             } catch (IOException e) {
@@ -113,6 +113,8 @@ public class MainController implements Initializable {
                 alert.setTitle("Create project failed");
                 alert.setHeaderText("Failed to create new project.");
                 alert.showAndWait();
+
+                e.printStackTrace();
                 // TODO nickavv: create custom "stack trace dialog" to show the actual error
             }
         });
