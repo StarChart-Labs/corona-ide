@@ -15,7 +15,7 @@ before_install:
   - pip install --user codecov
 
 script:
-  - ./gradlew check
+  - ./gradlew check --info
   - ./gradlew codeCoverageReport
   - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
 
