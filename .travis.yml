@@ -16,8 +16,8 @@ before_install:
 
 script:
   - ./gradlew check --info -Pheadless
-  - ./gradlew codeCoverageReport
-  - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
+  - ./gradlew codeCoverageReport -Pheadless=true
+  - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN -Pheadless=true
 
 after_success:
   - codecov
