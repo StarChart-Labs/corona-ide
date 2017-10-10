@@ -41,6 +41,7 @@ allprojects{
     apply plugin: 'eclipse'
     apply plugin: 'jacoco'
     apply plugin: 'nebula.dependency-recommender'
+    apply plugin: 'org.starchartlabs.flare.dependency-insight'
 
     dependencyRecommendations {
         dependencyLock file: file("$rootDir/dependencies.lock")
