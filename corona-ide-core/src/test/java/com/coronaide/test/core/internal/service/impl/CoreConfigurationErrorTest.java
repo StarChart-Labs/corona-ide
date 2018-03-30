@@ -35,7 +35,7 @@ public class CoreConfigurationErrorTest {
     public void getApplicationWorkingDirectoryBeforeInitialization() throws Exception {
         CoreConfiguration configuration = new CoreConfiguration();
 
-        configuration.getApplicationWorkingDirectory();
+        configuration.getApplicationMetaDataDirectory();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

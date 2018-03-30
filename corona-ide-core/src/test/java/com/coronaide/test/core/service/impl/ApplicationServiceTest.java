@@ -42,7 +42,7 @@ public class ApplicationServiceTest {
     @BeforeMethod
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(applicationDirectory);
+        Mockito.when(coreConfiguration.getApplicationMetaDataDirectory()).thenReturn(applicationDirectory);
 
         applicationService = new ApplicationService(coreConfiguration);
     }

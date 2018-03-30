@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.core.internal.service.IDatastoreManager;
 import com.coronaide.core.internal.service.impl.CoreConfiguration;
+import com.coronaide.core.internal.service.impl.DatastoreManager;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IProjectService;
 import com.coronaide.core.service.IWorkspaceService;
@@ -29,7 +31,7 @@ import com.coronaide.core.service.impl.WorkspaceService;
  * Utilizes the spring framework's Java configuration methodology to provide implementations
  *
  * @author romeara
- * @since 0.1
+ * @since 0.1.0
  */
 @Configuration
 public class CoronaIdeCoreConfiguration {
@@ -40,8 +42,13 @@ public class CoronaIdeCoreConfiguration {
     }
 
     @Bean
-    public IDatastoreService datastoreService() {
-        return new DatastoreService();
+    public IDatastoreManager datastoreManager() {
+        return new DatastoreManager();
+    }
+
+    @Bean
+    public IDatastoreService datastoreService(IDatastoreManager datastoreManager) {
+        return new DatastoreService(datastoreManager);
     }
 
     @Bean
@@ -50,8 +57,7 @@ public class CoronaIdeCoreConfiguration {
     }
 
     @Bean
-    public IProjectService projectService(ICoreConfiguration coreConfiguration, IWorkspaceService workspaceService,
-            IDatastoreService datastoreService) {
-        return new ProjectService(coreConfiguration, workspaceService, datastoreService);
+    public IProjectService projectService(IWorkspaceService workspaceService, IDatastoreService datastoreService) {
+        return new ProjectService(workspaceService, datastoreService);
     }
 }

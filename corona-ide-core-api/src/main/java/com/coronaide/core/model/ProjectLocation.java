@@ -8,7 +8,7 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  */
-package com.coronaide.core.internal.datastore.impl;
+package com.coronaide.core.model;
 
 import java.util.Objects;
 

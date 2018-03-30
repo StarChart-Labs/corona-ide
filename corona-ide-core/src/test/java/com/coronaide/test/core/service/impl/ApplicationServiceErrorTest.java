@@ -41,7 +41,7 @@ public class ApplicationServiceErrorTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullApplicationDirectory() throws Exception {
-        Mockito.when(coreConfiguration.getApplicationWorkingDirectory()).thenReturn(null);
+        Mockito.when(coreConfiguration.getApplicationMetaDataDirectory()).thenReturn(null);
 
         new ApplicationService(coreConfiguration);
     }

@@ -21,11 +21,12 @@ script:
 
 after_success:
   - codecov
+  - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
   - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
 
 notifications:
   email:
     recipients:
-      - corona.ide.dev@gmail.com
+      - builds@starchartlabs.org
     on_success: change
     on_failure: always

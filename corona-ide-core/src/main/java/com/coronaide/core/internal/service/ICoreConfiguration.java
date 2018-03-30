@@ -16,7 +16,7 @@ import java.nio.file.Path;
  * Provides access to manipulate and read core configuration parameters, such as the application location
  *
  * @author romeara
- * @since 0.1
+ * @since 0.1.0
  */
 public interface ICoreConfiguration {
 
@@ -30,29 +30,23 @@ public interface ICoreConfiguration {
      *            The location of the active workspace
      * @throws IllegalStateException
      *             If the application location is set more than once
-     * @since 0.1
+     * @since 0.1.0
      */
     void setLocations(Path applicationLocation, Path workspaceLocation);
-
-    /**
-     * @return The sub-path below a given element which should be considered the working directory of an element
-     * @since 0.1
-     */
-    Path getWorkingDirectoryName();
 
     /**
      * @return Path to the Corona IDE working directory for the application
      * @throws IllegalStateException
      *             If the location where the application is installed was never initialized
-     * @since 0.1
+     * @since 0.1.0
      */
-    Path getApplicationWorkingDirectory();
+    Path getApplicationMetaDataDirectory();
 
     /**
      * @return Path to the directory where the currently active workspace is located
      * @throws IllegalStateException
      *             If the location where the workspace is located was never initialized
-     * @since 0.1
+     * @since 0.1.0
      */
     Path getActiveWorkspaceDirectory();
 
