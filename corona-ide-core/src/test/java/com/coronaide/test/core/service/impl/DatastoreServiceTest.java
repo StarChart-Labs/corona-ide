@@ -23,6 +23,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.internal.service.IDatastoreManager;
+import com.coronaide.core.internal.service.impl.DatastoreManager;
 import com.coronaide.core.model.Application;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Version;
@@ -42,6 +44,8 @@ public class DatastoreServiceTest {
 
     @Mock
     private Module module;
+
+    private IDatastoreManager datastoreManager = new DatastoreManager();
 
     private Application application;
 
@@ -67,7 +71,7 @@ public class DatastoreServiceTest {
         application = new Application(coronaDir);
         workspace = new Workspace(workspaceDir);
 
-        datastoreService = new DatastoreService();
+        datastoreService = new DatastoreService(datastoreManager);
     }
 
     @Test

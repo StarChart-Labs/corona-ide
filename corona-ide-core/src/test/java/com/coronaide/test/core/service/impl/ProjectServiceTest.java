@@ -31,15 +31,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.Datastores;
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
-import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
-import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.core.internal.datastore.util.Datastores;
+import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
+import com.coronaide.core.model.WorkspaceMetaData;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.core.service.impl.ProjectService;
@@ -48,9 +48,6 @@ public class ProjectServiceTest {
 
     /** Logger reference to output information to the application log files */
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceTest.class);
-
-    @Mock
-    private ICoreConfiguration coreConfiguration;
 
     @Mock
     private IWorkspaceService workspaceService;
@@ -64,40 +61,38 @@ public class ProjectServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        projectService = new ProjectService(coreConfiguration, workspaceService, datastoreService);
+        projectService = new ProjectService(workspaceService, datastoreService);
     }
 
     @AfterMethod
     public void tearDown(ITestResult result) {
         logger.trace("Verifying mock interactions for {}", result);
 
-        Mockito.verifyNoMoreInteractions(coreConfiguration,
-                workspaceService,
+        Mockito.verifyNoMoreInteractions(workspaceService,
                 datastoreService);
     }
 
     @Test
     public void createNoWorkspaceMetaData() throws Exception {
         Path projectRoot = Files.createTempFile("projectService", "-create");
-        Path workingDirectory = Paths.get(".corona-ide");
         projectRoot.toFile().deleteOnExit();
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = com.coronaide.core.model.CoreDatastores
+                .getWorkspaceDatastore();
         WorkspaceMetaData expectedData = new WorkspaceMetaData(
                 Collections.singleton(new ProjectLocation(projectRoot.toString())));
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.empty());
-        Mockito.when(coreConfiguration.getWorkingDirectoryName()).thenReturn(workingDirectory);
 
         Project result = projectService.create(new ProjectRequest(projectRoot));
 
         Assert.assertNotNull(result);
         Assert.assertEquals(result.getName(), projectRoot.getFileName().toString());
         Assert.assertEquals(result.getRootDirectory(), projectRoot);
-        Assert.assertEquals(result.getWorkingDirectory(), projectRoot.resolve(workingDirectory));
+        Assert.assertEquals(result.getWorkingDirectory(), Datastores.getMetaDataDirectory(projectRoot));
 
         // Make sure directory exists
         Assert.assertTrue(projectRoot.toFile().exists());
@@ -105,13 +100,11 @@ public class ProjectServiceTest {
         Mockito.verify(workspaceService).getActiveWorkspace();
         Mockito.verify(datastoreService).load(workspace, module, datastore);
         Mockito.verify(datastoreService).store(workspace, module, datastore, expectedData);
-        Mockito.verify(coreConfiguration).getWorkingDirectoryName();
     }
 
     @Test
     public void createExistingWorkspaceMetaData() throws Exception {
         Path projectRoot = Files.createTempFile("projectService", "-create");
-        Path workingDirectory = Paths.get(".corona-ide");
         projectRoot.toFile().deleteOnExit();
 
         ProjectLocation existingLocation = new ProjectLocation(Paths.get("other").toString());
@@ -124,20 +117,19 @@ public class ProjectServiceTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
         WorkspaceMetaData expectedData = new WorkspaceMetaData(expectedLocations);
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
-        Mockito.when(coreConfiguration.getWorkingDirectoryName()).thenReturn(workingDirectory);
 
         Project result = projectService.create(new ProjectRequest(projectRoot));
 
         Assert.assertNotNull(result);
         Assert.assertEquals(result.getName(), projectRoot.getFileName().toString());
         Assert.assertEquals(result.getRootDirectory(), projectRoot);
-        Assert.assertEquals(result.getWorkingDirectory(), projectRoot.resolve(workingDirectory));
+        Assert.assertEquals(result.getWorkingDirectory(), Datastores.getMetaDataDirectory(projectRoot));
 
         // Make sure directory exists
         Assert.assertTrue(projectRoot.toFile().exists());
@@ -145,20 +137,16 @@ public class ProjectServiceTest {
         Mockito.verify(workspaceService).getActiveWorkspace();
         Mockito.verify(datastoreService).load(workspace, module, datastore);
         Mockito.verify(datastoreService).store(workspace, module, datastore, expectedData);
-        Mockito.verify(coreConfiguration).getWorkingDirectoryName();
     }
 
     @Test
     public void getAllNoWorkspaceMetaData() throws Exception {
-        Path workingDirectory = Paths.get(".corona-ide");
-
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.empty());
-        Mockito.when(coreConfiguration.getWorkingDirectoryName()).thenReturn(workingDirectory);
 
         Collection<Project> result = projectService.getAll();
 
@@ -167,17 +155,15 @@ public class ProjectServiceTest {
 
         Mockito.verify(workspaceService).getActiveWorkspace();
         Mockito.verify(datastoreService).load(workspace, module, datastore);
-        Mockito.verify(coreConfiguration).getWorkingDirectoryName();
     }
 
     @Test
     public void getAllExistingWorkspaceMetaData() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Paths.get("other");
-        Path workingDirectory = Paths.get(".corona-ide");
         ProjectLocation existingLocation = new ProjectLocation(projectRoot.toString());
         Set<ProjectLocation> existingLocations = new HashSet<>();
         existingLocations.add(existingLocation);
@@ -185,7 +171,6 @@ public class ProjectServiceTest {
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
-        Mockito.when(coreConfiguration.getWorkingDirectoryName()).thenReturn(workingDirectory);
 
         Collection<Project> result = projectService.getAll();
 
@@ -197,21 +182,19 @@ public class ProjectServiceTest {
         Assert.assertNotNull(project);
         Assert.assertEquals(project.getName(), projectRoot.getFileName().toString());
         Assert.assertEquals(project.getRootDirectory(), projectRoot);
-        Assert.assertEquals(project.getWorkingDirectory(), projectRoot.resolve(workingDirectory));
+        Assert.assertEquals(project.getWorkingDirectory(), Datastores.getMetaDataDirectory(projectRoot));
 
         Mockito.verify(workspaceService).getActiveWorkspace();
         Mockito.verify(datastoreService).load(workspace, module, datastore);
-        Mockito.verify(coreConfiguration).getWorkingDirectoryName();
     }
 
     @Test
     public void remove() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Files.createTempFile("projectService", "-create");
-        Path workingDirectory = Paths.get(".corona-ide");
         projectRoot.toFile().deleteOnExit();
 
         ProjectLocation existingLocation = new ProjectLocation(projectRoot.toString());
@@ -220,7 +203,7 @@ public class ProjectServiceTest {
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
 
         Project project = new Project(projectRoot.getFileName().toString(), projectRoot,
-                projectRoot.resolve(workingDirectory));
+                Datastores.getMetaDataDirectory(projectRoot));
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
@@ -240,10 +223,9 @@ public class ProjectServiceTest {
     public void delete() throws Exception {
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
 
         Path projectRoot = Files.createTempFile("projectService", "-create");
-        Path workingDirectory = Paths.get(".corona-ide");
         projectRoot.toFile().deleteOnExit();
 
         ProjectLocation existingLocation = new ProjectLocation(projectRoot.toString());
@@ -252,7 +234,7 @@ public class ProjectServiceTest {
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
 
         Project project = new Project(projectRoot.getFileName().toString(), projectRoot,
-                projectRoot.resolve(workingDirectory));
+                Datastores.getMetaDataDirectory(projectRoot));
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));

@@ -37,7 +37,7 @@ public class ApplicationService implements IApplicationService {
     public ApplicationService(ICoreConfiguration coreConfiguration) {
         Objects.requireNonNull(coreConfiguration);
 
-        coronaIdeApplication = new Application(coreConfiguration.getApplicationWorkingDirectory());
+        coronaIdeApplication = new Application(coreConfiguration.getApplicationMetaDataDirectory());
     }
 
     @Override

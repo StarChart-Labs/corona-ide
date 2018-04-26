@@ -20,6 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.coronaide.core.internal.datastore.util.Datastores;
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IWorkspaceService;
@@ -33,7 +34,6 @@ import com.coronaide.core.service.impl.WorkspaceService;
 public class WorkspaceServiceTest {
 
     private final Path workspaceDirectory = Paths.get("workspace");
-    private final Path workingDirectory = Paths.get("corona-ide");
 
     @Mock
     private ICoreConfiguration coreConfiguration;
@@ -44,7 +44,6 @@ public class WorkspaceServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Mockito.when(coreConfiguration.getActiveWorkspaceDirectory()).thenReturn(workspaceDirectory);
-        Mockito.when(coreConfiguration.getWorkingDirectoryName()).thenReturn(workingDirectory);
 
         workspaceService = new WorkspaceService(coreConfiguration);
     }
@@ -54,7 +53,7 @@ public class WorkspaceServiceTest {
         Workspace workspace = workspaceService.getActiveWorkspace();
 
         Assert.assertNotNull(workspace);
-        Assert.assertEquals(workspace.getWorkingDirectory(), workspaceDirectory.resolve(workingDirectory));
+        Assert.assertEquals(workspace.getWorkingDirectory(), Datastores.getMetaDataDirectory(workspaceDirectory));
     }
 
 }

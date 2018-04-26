@@ -8,12 +8,12 @@
  * Contributors:
  *    romeara - initial API and implementation and/or initial documentation
  */
-package com.coronaide.test.core.internal.datastore.impl;
+package com.coronaide.test.core.model;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
+import com.coronaide.core.model.ProjectLocation;
 
 public class ProjectLocationTest {
 

@@ -11,9 +11,9 @@
 package com.coronaide.core.internal.service.impl;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
+import com.coronaide.core.internal.datastore.util.Datastores;
 import com.coronaide.core.internal.service.ICoreConfiguration;
 
 /**
@@ -44,17 +44,12 @@ public class CoreConfiguration implements ICoreConfiguration {
     }
 
     @Override
-    public Path getWorkingDirectoryName() {
-        return Paths.get(".corona-ide");
-    }
-
-    @Override
-    public Path getApplicationWorkingDirectory() {
+    public Path getApplicationMetaDataDirectory() {
         if (applicationLocation == null) {
             throw new IllegalStateException("Application location was not initialized");
         }
 
-        return applicationLocation.resolve(getWorkingDirectoryName());
+        return Datastores.getMetaDataDirectory(applicationLocation);
     }
 
     @Override

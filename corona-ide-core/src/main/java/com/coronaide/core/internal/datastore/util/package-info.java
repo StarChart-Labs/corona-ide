@@ -9,11 +9,12 @@
  *    romeara - initial API and implementation and/or initial documentation
  *******************************************************************************/
 /**
- * Implementation of datastores which are intended for use only by the core implementation project or consumers thereof
+ * Implementation of datastore utilities which are intended for use only by the core implementation project or consumers
+ * thereof
  *
  * @author romeara
  */
 @ParametersAreNonnullByDefault
-package com.coronaide.core.internal.datastore.impl;
+package com.coronaide.core.internal.datastore.util;
 
 import javax.annotation.ParametersAreNonnullByDefault;

@@ -27,15 +27,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.coronaide.core.datastore.Datastore;
-import com.coronaide.core.internal.datastore.impl.Datastores;
-import com.coronaide.core.internal.datastore.impl.ProjectLocation;
-import com.coronaide.core.internal.datastore.impl.WorkspaceMetaData;
-import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
+import com.coronaide.core.model.WorkspaceMetaData;
 import com.coronaide.core.service.IDatastoreService;
 import com.coronaide.core.service.IWorkspaceService;
 import com.coronaide.core.service.impl.ProjectService;
@@ -44,9 +43,6 @@ public class ProjectServiceErrorTest {
 
     /** Logger reference to output information to the application log files */
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceErrorTest.class);
-
-    @Mock
-    private ICoreConfiguration coreConfiguration;
 
     @Mock
     private IWorkspaceService workspaceService;
@@ -60,31 +56,25 @@ public class ProjectServiceErrorTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        projectService = new ProjectService(coreConfiguration, workspaceService, datastoreService);
+        projectService = new ProjectService(workspaceService, datastoreService);
     }
 
     @AfterMethod
     public void tearDown(ITestResult result) {
         logger.trace("Verifying mock interactions for {}", result);
 
-        Mockito.verifyNoMoreInteractions(coreConfiguration,
-                workspaceService,
+        Mockito.verifyNoMoreInteractions(workspaceService,
                 datastoreService);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void createNullCoreConfiguration() throws Exception {
-        new ProjectService(null, workspaceService, datastoreService);
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
     public void createNullWorkspaceService() throws Exception {
-        new ProjectService(coreConfiguration, null, datastoreService);
+        new ProjectService(null, datastoreService);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullDatastoreService() throws Exception {
-        new ProjectService(coreConfiguration, workspaceService, null);
+        new ProjectService(workspaceService, null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -98,7 +88,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(
                 Collections.singleton(new ProjectLocation(projectRoot.toString())));
 
@@ -125,7 +115,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
@@ -151,7 +141,7 @@ public class ProjectServiceErrorTest {
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = Datastores.getWorkspaceDatastore();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);

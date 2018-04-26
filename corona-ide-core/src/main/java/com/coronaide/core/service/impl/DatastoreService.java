@@ -10,30 +10,17 @@
  *******************************************************************************/
 package com.coronaide.core.service.impl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 import java.util.Optional;
 
 import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.exception.DataStorageException;
+import com.coronaide.core.internal.service.IDatastoreManager;
 import com.coronaide.core.model.Application;
 import com.coronaide.core.model.Module;
-import com.coronaide.core.model.Version;
 import com.coronaide.core.model.Workspace;
 import com.coronaide.core.service.IDatastoreService;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonWriter;
 
 /**
  * Implementation of {@link IDatastoreService}. Not intended for direct use by clients - use dependency injection to
@@ -44,20 +31,17 @@ import com.google.gson.stream.JsonWriter;
  */
 public class DatastoreService implements IDatastoreService {
 
-    private static final String VERSION_FILE = "versions.json";
-
-    private final Gson gson;
-
-    private final JsonParser jsonParser;
+    private final IDatastoreManager datastoreManager;
 
     /**
      * Creates a new data store service instance
      *
-     * @since 0.1
+     * @param datastoreManager
+     *            API providing common,basic datastore handling functions
+     * @since 0.1.0
      */
-    public DatastoreService() {
-        gson = new Gson();
-        jsonParser = new JsonParser();
+    public DatastoreService(IDatastoreManager datastoreManager) {
+        this.datastoreManager = Objects.requireNonNull(datastoreManager);
     }
 
     @Override
@@ -68,7 +52,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(data);
 
         try {
-            store(application.getWorkingDirectory(), module, datastore, data);
+            datastoreManager.store(application.getWorkingDirectory(), module, datastore, data);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error storing data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -82,7 +66,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(datastore);
 
         try {
-            return load(application.getWorkingDirectory(), module, datastore);
+            return datastoreManager.load(application.getWorkingDirectory(), module, datastore);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error loading data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -95,7 +79,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(module);
 
         try {
-            clear(application.getWorkingDirectory(), module);
+            datastoreManager.clear(application.getWorkingDirectory(), module);
         } catch (IOException e) {
             throw new DataStorageException("Error clearing data store for module " + module.getId(), e);
         }
@@ -109,7 +93,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(data);
 
         try {
-            store(workspace.getWorkingDirectory(), module, datastore, data);
+            datastoreManager.store(workspace.getWorkingDirectory(), module, datastore, data);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error storing data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -123,7 +107,7 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(datastore);
 
         try {
-            return load(workspace.getWorkingDirectory(), module, datastore);
+            return datastoreManager.load(workspace.getWorkingDirectory(), module, datastore);
         } catch (IOException e) {
             throw new DataStorageException(
                     "Error loading data store for module " + module.getId() + " (" + datastore.getKey() + ")", e);
@@ -136,187 +120,9 @@ public class DatastoreService implements IDatastoreService {
         Objects.requireNonNull(module);
 
         try {
-            clear(workspace.getWorkingDirectory(), module);
+            datastoreManager.clear(workspace.getWorkingDirectory(), module);
         } catch (IOException e) {
             throw new DataStorageException("Error clearing data store for module " + module.getId(), e);
-        }
-    }
-
-    /**
-     * Loads data for a module within a given Corona IDE working directory
-     *
-     * @param coronaDirectory
-     *            The Corona IDE working directory the data storage system is working within
-     * @param module
-     *            The module data is being loaded for
-     * @param datastore
-     *            The data store managing the data
-     * @return The loaded data, if any - empty if no data is currently stored for the given datastore and module
-     * @throws IOException
-     *             If there is a file system I/O error loading the data
-     */
-    private <T> Optional<T> load(Path coronaDirectory, Module module, Datastore<T> datastore) throws IOException {
-        T result = null;
-
-        Path moduleDirectory = getOrCreateModuleDirectory(coronaDirectory, module);
-        Optional<Version> existingVersion = loadVersion(moduleDirectory, datastore.getKey());
-        Path datastorePath = moduleDirectory.resolve(datastore.getKey());
-
-        if (existingVersion.isPresent() && Files.exists(datastorePath)) {
-            try (BufferedReader input = Files.newBufferedReader(datastorePath)) {
-                result = datastore.load(input);
-            }
-
-            if (!Objects.equals(existingVersion.get(), module.getVersion())) {
-                store(coronaDirectory, module, datastore, result);
-            }
-        }
-
-        return Optional.ofNullable(result);
-    }
-
-    /**
-     * Stores data for the module within a given Corona IDE working directory
-     *
-     * @param coronaDirectory
-     *            The Corona IDE working directory the data storage system is working within
-     * @param module
-     *            The module data is being stored for
-     * @param datastore
-     *            The data store managing the data
-     * @param data
-     *            The data representation to store
-     * @throws IOException
-     *             If there is a file system I/O error storing the data
-     */
-    private <T> void store(Path coronaDirectory, Module module, Datastore<T> datastore, T data) throws IOException {
-        Path moduleDirectory = getOrCreateModuleDirectory(coronaDirectory, module);
-        storeVersion(moduleDirectory, module.getVersion(), datastore.getKey());
-
-        Path datastoreFile = moduleDirectory.resolve(datastore.getKey());
-
-        if (!Files.exists(datastoreFile)) {
-            Files.createFile(datastoreFile);
-        }
-
-        if (data != null) {
-            try (BufferedWriter output = Files.newBufferedWriter(datastoreFile)) {
-                datastore.store(data, output);
-            }
-        }
-    }
-
-    /**
-     * Clears all data associated with a given module in a specific working directory
-     *
-     * @param coronaDirectory
-     *            The Corona IDE working directory the data storage system is working within
-     * @param module
-     *            The module data is being cleared for
-     * @throws IOException
-     *             If there is a file system I/O error clearing the data
-     */
-    private void clear(Path coronaDirectory, Module module) throws IOException {
-        Path moduleDirectory = getOrCreateModuleDirectory(coronaDirectory, module);
-
-        Files.walkFileTree(moduleDirectory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-
-    /**
-     * Constructs a reference to the working directory for a module, creating it if it does not yet exist
-     *
-     * @param parentDir
-     *            The parent directory which should contain the module directory
-     * @param module
-     *            The module to find the directory for
-     * @return A reference to the module working directory
-     * @throws IOException
-     *             If there is a file system I/O error creating the module working directory
-     */
-    private Path getOrCreateModuleDirectory(Path parentDir, Module module) throws IOException {
-        Path directory = parentDir.resolve(module.getId());
-
-        if (!Files.exists(directory)) {
-            Files.createDirectories(directory);
-        }
-
-        return directory;
-    }
-
-    /**
-     * Loads the current version of stored data for a given data store
-     *
-     * @param moduleDirectory
-     *            The working directory for files associated with the module
-     * @param datastoreKey
-     *            The identifier of the data store the record is being loaded for
-     * @return The current stored version of data, empty if no version is recorded
-     * @throws IOException
-     *             If there is a file system I/O error reading the version
-     */
-    private Optional<Version> loadVersion(Path moduleDirectory, String datastoreKey) throws IOException {
-        Version result = null;
-        Path versionPath = moduleDirectory.resolve(VERSION_FILE);
-
-        if (Files.exists(versionPath)) {
-            try (Reader reader = Files.newBufferedReader(versionPath)) {
-                JsonElement versionElement = jsonParser.parse(reader)
-                        .getAsJsonObject()
-                        .get(datastoreKey);
-
-                // Safe, as this is documented to return null if versionElement is null
-                result = gson.fromJson(versionElement, Version.class);
-            }
-        }
-
-        return Optional.ofNullable(result);
-    }
-
-    /**
-     * Stores a version as the current version used with the given data store
-     *
-     * @param moduleDirectory
-     *            The working directory for files associated with the module
-     * @param version
-     *            The current version to record for the data store
-     * @param datastoreKey
-     *            The identifier of the data store the record is being updated for
-     * @throws IOException
-     *             If there is a file system I/O error storing the version
-     */
-    private void storeVersion(Path moduleDirectory, Version version, String datastoreKey) throws IOException {
-        Path versionPath = moduleDirectory.resolve(VERSION_FILE);
-        JsonObject allVersions = null;
-
-        // Load the JSON if it exists, otherwise initialize the representation
-        if (Files.exists(versionPath)) {
-            try (Reader reader = Files.newBufferedReader(versionPath)) {
-                allVersions = jsonParser.parse(reader).getAsJsonObject();
-            }
-        } else {
-            Files.createFile(versionPath);
-            allVersions = new JsonObject();
-        }
-
-        // Add/replace the entry
-        JsonElement newVersion = gson.toJsonTree(version);
-        allVersions.add(datastoreKey, newVersion);
-
-        // Write out to file
-        try (JsonWriter writer = gson.newJsonWriter(Files.newBufferedWriter(versionPath))) {
-            gson.toJson(allVersions, writer);
         }
     }
 
