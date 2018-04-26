@@ -1,9 +1,47 @@
+def javaExtDirectory = "${buildDir}/test-java-ext"
+
+configurations {
+	testJavaExt
+}
+
+task stageTestJavaExt (type: Copy) {
+	from configurations.testJavaExt
+	into "${javaExtDirectory}"
+}
+
+task cleanTestJavaExt (type: Delete) {
+	delete files("${javaExtDirectory}")
+	delete "${javaExtDirectory}"
+}
+
+tasks.clean.dependsOn cleanTestJavaExt
+tasks.test.dependsOn stageTestJavaExt
+
 test{
-	systemProperty "testfx.robot", "glass"
-    systemProperty "testfx.headless", "true"
-    systemProperty "prism.order", "sw"
-    systemProperty "prism.text", "t2k"
-    systemProperty "java.awt.headless", "true"
+	//romeara: Unfortunately, headless is broken for These test right now
+	//See: https://github.com/TestFX/Monocle/issues/12
+	//See: https://stackoverflow.com/questions/45149425/first-testfx-test-executed-fails-identical-second-test-passes-when-in-headless
+    if(project.hasProperty('headless')){
+		//There are bugs with some tests in headless mode
+		exclude 'com/coronaide/test/ui/ProjectDeleteTest.class'
+		exclude 'com/coronaide/test/ui/AboutDialogTest.class'
+		exclude 'com/coronaide/test/ui/CreateProjectTest.class'
+	
+		doFirst {
+			def javaExtFile = file("${javaExtDirectory}")
+	        allJvmArgs = allJvmArgs.collect { String arg -> // This was the only way to override java.ext.dirs
+	            arg.startsWith("-Djava.ext.dirs") ? "${arg}${java.io.File.pathSeparator}${javaExtFile}" : arg;
+	        }
+	    }
+	    
+		jvmArgs '-Djava.awt.headless=true'
+		jvmArgs '-Dtestfx.robot=glass'
+		jvmArgs '-Dtestfx.headless=true'
+		jvmArgs '-Dprism.order=sw'
+		jvmArgs '-Dprism.text=t2k'
+		jvmArgs '-Dtestfx.setup.timeout=2500'
+	}
+	
     useJUnit()
 }
 
@@ -19,5 +57,8 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-test'
     testCompile group: 'org.testfx', name: 'testfx-core'
     testCompile group: 'org.testfx', name: 'testfx-junit'
+    
     testRuntime group: 'org.testfx', name: 'openjfx-monocle'
+    
+    testJavaExt group: 'org.testfx', name: 'openjfx-monocle'
 }

@@ -16,6 +16,11 @@
          <children>
             <MenuBar HBox.hgrow="ALWAYS">
               <menus>
+              	<Menu id="menu-corona" mnemonicParsing="false" style="-fx-font-weight: bold;" text="Corona">
+                  <items>
+                    <MenuItem style="-fx-font-weight: normal;" id="menu-corona-about" mnemonicParsing="false" onAction="#handleAboutHelp" text="About" />
+                  </items>
+                </Menu>
                 <Menu id="menu-file" mnemonicParsing="false" text="File">
                   <items>
                     <MenuItem id="menu-file-new-project" mnemonicParsing="false" onAction="#handleFileNewProject" text="New Project" />
@@ -24,11 +29,6 @@
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit" />
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleAboutHelp" text="About" />
-                  </items>
-                </Menu>
               </menus>
             </MenuBar>
          </children>

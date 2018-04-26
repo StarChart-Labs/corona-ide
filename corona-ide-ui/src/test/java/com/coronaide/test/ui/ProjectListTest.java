@@ -38,9 +38,14 @@ public class ProjectListTest extends CoronaUITest {
     public void projectListTest() {
         List<String> projectNamesList = testProjects.stream().map(Project::getName).collect(Collectors.toList());
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
-        Assert.assertEquals(2, listViewProjects.getItems().size());
+
+        listViewProjects.getItems().forEach(System.out::println);
+
+        Assert.assertEquals("Expected the correct number of projects to be in the projects list.", 2,
+                listViewProjects.getItems().size());
         for (Project project : listViewProjects.getItems()) {
-            Assert.assertTrue(projectNamesList.contains(project.getName()));
+            Assert.assertTrue("Expected all of our test projects to be present in the projects list.",
+                    projectNamesList.contains(project.getName()));
         }
     }
 
