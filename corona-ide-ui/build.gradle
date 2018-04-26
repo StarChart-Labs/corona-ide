@@ -42,11 +42,6 @@ test{
 		jvmArgs '-Dtestfx.setup.timeout=2500'
 	}
 	
-	testLogging {
-        // Make sure output from standard out or error is shown in Gradle output.
-        showStandardStreams = true
-    }
-	
     useJUnit()
 }
 

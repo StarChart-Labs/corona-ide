@@ -39,10 +39,7 @@ public class ProjectListTest extends CoronaUITest {
         List<String> projectNamesList = testProjects.stream().map(Project::getName).collect(Collectors.toList());
         ListView<Project> listViewProjects = lookup("#listViewProjects").query();
 
-        // TODO: testing, remove
-        System.out.println("===== BEGIN TEST LOGGING =====");
         listViewProjects.getItems().forEach(System.out::println);
-        System.out.println("===== END TEST LOGGING =====");
 
         Assert.assertEquals("Expected the correct number of projects to be in the projects list.", 2,
                 listViewProjects.getItems().size());
