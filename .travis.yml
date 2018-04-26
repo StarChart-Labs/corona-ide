@@ -14,6 +14,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - pip install --user codecov
 
+script:
+  - ./gradlew check --info -Pheadless
+
 after_success:
   - codecov
   - ./gradlew sonarqube -PsonarLogin=$SONAR_TOKEN
