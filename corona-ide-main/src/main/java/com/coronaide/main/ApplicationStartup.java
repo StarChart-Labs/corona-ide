@@ -16,6 +16,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.coronaide.core.internal.service.ICoreConfiguration;
 import com.coronaide.main.config.CoronaIdeMainConfiguration;
 
+/**
+ * Listens for the Spring ApplicationReadyEvent so it can finish configuring the application and for use
+ * @author nickavv
+ * @since 0.1.0
+ */
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
     /** Logger reference to output information to the application log files */
