@@ -30,7 +30,7 @@ import com.coronaide.core.datastore.Datastore;
 import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
-import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectDeleteRequest;
 import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
@@ -104,14 +104,13 @@ public class ProjectServiceErrorTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void removeNullProject() throws Exception {
-        projectService.remove(null);
+    public void deleteNullRequest() throws Exception {
+        projectService.delete(null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void removeDoesntExist() throws Exception {
         Path projectRoot = Paths.get("root");
-        Project project = new Project("name", projectRoot, projectRoot);
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
         Module module = CoronaIdeCore.getModule();
@@ -122,33 +121,7 @@ public class ProjectServiceErrorTest {
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
 
         try {
-            projectService.remove(project);
-        } finally {
-            Mockito.verify(workspaceService).getActiveWorkspace();
-            Mockito.verify(datastoreService).load(workspace, module, datastore);
-        }
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
-    public void deleteNullProject() throws Exception {
-        projectService.delete(null);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void deleteDoesntExist() throws Exception {
-        Path projectRoot = Paths.get("root");
-        Project project = new Project("name", projectRoot, projectRoot);
-
-        Workspace workspace = new Workspace(Paths.get("workspace"));
-        Module module = CoronaIdeCore.getModule();
-        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
-        WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
-
-        Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
-        Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
-
-        try {
-            projectService.delete(project);
+            projectService.delete(new ProjectDeleteRequest(projectRoot, false));
         } finally {
             Mockito.verify(workspaceService).getActiveWorkspace();
             Mockito.verify(datastoreService).load(workspace, module, datastore);

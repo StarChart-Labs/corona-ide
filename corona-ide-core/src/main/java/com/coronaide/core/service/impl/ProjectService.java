@@ -30,6 +30,7 @@ import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectDeleteRequest;
 import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
@@ -110,28 +111,32 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public void remove(Project project) {
-        Objects.requireNonNull(project);
+    public void delete(ProjectDeleteRequest request) throws IOException {
+        Objects.requireNonNull(request);
 
         Workspace workspace = workspaceService.getActiveWorkspace();
+        Module module = CoronaIdeCore.getModule();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
+
+        Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
+
+        Project project = workspaceData.map(WorkspaceMetaData::getProjectLocations)
+                .orElse(Collections.emptySet()).stream()
+                .filter(p -> request.getRootDirectory().compareTo(Paths.get(p.getRootDirectory())) == 0)
+                .findFirst()
+                .map(this::toProject)
+                .orElseThrow(() -> new IllegalArgumentException());
 
         removeFromWorkspace(workspace, project);
-    }
 
-    @Override
-    public void delete(Project project) throws IOException {
-        Objects.requireNonNull(project);
-
-        Workspace workspace = workspaceService.getActiveWorkspace();
-
-        removeFromWorkspace(workspace, project);
-
-        // Delete the directory containing the project
-        Files.walk(project.getRootDirectory())
-        .sorted(Comparator.reverseOrder())
-        .map(Path::toFile)
-        .peek(System.out::println)
-        .forEach(File::delete);
+        if (request.getDeleteFromDisk() == true) {
+            // Delete the directory containing the project
+            Files.walk(project.getRootDirectory())
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .peek(System.out::println)
+                    .forEach(File::delete);
+        }
     }
 
     /**

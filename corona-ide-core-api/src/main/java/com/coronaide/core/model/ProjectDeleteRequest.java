@@ -1,13 +1,13 @@
-/*******************************************************************************
- * Copyright (c) Jan 15, 2017 Corona IDE.
+/*
+ * Copyright (c) Jul 14, 2018 StarChart Labs Authors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    romeara - initial API and implementation and/or initial documentation
- *******************************************************************************/
+ *    nickv - initial API and implementation and/or initial documentation
+ */
 package com.coronaide.core.model;
 
 import java.nio.file.Path;
@@ -20,48 +20,61 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents a request to create or alter a project within Corona IDE. A project is a collection of files and settings
- * which constitutes a set of functionality
+ * Represents a request to remove an existing project from the current workspace
  *
- * @author romeara
- * @since 0.1
+ * @author nickavv
+ * @since 0.1.0
  */
 @Immutable
-public final class ProjectRequest {
+public final class ProjectDeleteRequest {
 
     private final Path rootDirectory;
+    
+    private final boolean deleteFromDisk;
 
     /**
      * @param rootDirectory
      *            The directory which is the root of all files which are considered part of the project
-     * @since 0.1
+     * @param deleteFromDisk
+     *            Whether to also delete the file contents from disk
+     * @since 0.1.0
      */
     @JsonCreator
-    public ProjectRequest(@JsonProperty("rootDirectory") Path rootDirectory) {
+    public ProjectDeleteRequest(@JsonProperty("rootDirectory") Path rootDirectory, @JsonProperty("deleteFromDisk") boolean deleteFromDisk) {
         this.rootDirectory = Objects.requireNonNull(rootDirectory);
+        this.deleteFromDisk = deleteFromDisk;
     }
 
     /**
      * @return The directory which is the root of all files which are considered part of the project
-     * @since 0.1
+     * @since 0.1.0
      */
     public Path getRootDirectory() {
         return rootDirectory;
     }
 
+    /**
+     * @return Whether to also delete the file contents from disk
+     * @since 0.1.0
+     */
+    public boolean getDeleteFromDisk() {
+        return deleteFromDisk;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(getRootDirectory());
+        return Objects.hash(getRootDirectory(), getDeleteFromDisk());
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         boolean result = false;
 
-        if (obj instanceof ProjectRequest) {
-            ProjectRequest compare = (ProjectRequest) obj;
+        if (obj instanceof ProjectDeleteRequest) {
+            ProjectDeleteRequest compare = (ProjectDeleteRequest) obj;
 
-            result = Objects.equals(compare.getRootDirectory(), getRootDirectory());
+            result = Objects.equals(compare.getRootDirectory(), getRootDirectory()) &&
+                    Objects.equals(compare.getDeleteFromDisk(), getDeleteFromDisk());
         }
 
         return result;
@@ -71,6 +84,7 @@ public final class ProjectRequest {
     public String toString() {
         return new StringBuilder().append(getClass().getSimpleName()).append('{')
                 .append("rootDirectory").append('=').append(getRootDirectory())
+                .append("deleteFromDisk").append('=').append(getDeleteFromDisk())
                 .append('}').toString();
     }
 }

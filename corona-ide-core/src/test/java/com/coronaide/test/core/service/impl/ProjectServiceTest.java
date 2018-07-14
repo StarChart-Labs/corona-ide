@@ -36,6 +36,7 @@ import com.coronaide.core.model.CoreDatastores;
 import com.coronaide.core.model.CoronaIdeCore;
 import com.coronaide.core.model.Module;
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectDeleteRequest;
 import com.coronaide.core.model.ProjectLocation;
 import com.coronaide.core.model.ProjectRequest;
 import com.coronaide.core.model.Workspace;
@@ -202,19 +203,16 @@ public class ProjectServiceTest {
         existingLocations.add(existingLocation);
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
 
-        Project project = new Project(projectRoot.getFileName().toString(), projectRoot,
-                Datastores.getMetaDataDirectory(projectRoot));
-
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
 
-        projectService.remove(project);
+        projectService.delete(new ProjectDeleteRequest(projectRoot, false));
 
         // Directory should still exist
         Assert.assertTrue(projectRoot.toFile().exists());
 
         Mockito.verify(workspaceService).getActiveWorkspace();
-        Mockito.verify(datastoreService).load(workspace, module, datastore);
+        Mockito.verify(datastoreService, Mockito.times(2)).load(workspace, module, datastore);
         Mockito.verify(datastoreService).store(workspace, module, datastore,
                 new WorkspaceMetaData(Collections.emptySet()));
     }
@@ -233,19 +231,16 @@ public class ProjectServiceTest {
         existingLocations.add(existingLocation);
         WorkspaceMetaData existingData = new WorkspaceMetaData(existingLocations);
 
-        Project project = new Project(projectRoot.getFileName().toString(), projectRoot,
-                Datastores.getMetaDataDirectory(projectRoot));
-
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
 
-        projectService.delete(project);
+        projectService.delete(new ProjectDeleteRequest(projectRoot, true));
 
         // Directory should be deleted
         Assert.assertFalse(projectRoot.toFile().exists());
 
         Mockito.verify(workspaceService).getActiveWorkspace();
-        Mockito.verify(datastoreService).load(workspace, module, datastore);
+        Mockito.verify(datastoreService, Mockito.times(2)).load(workspace, module, datastore);
         Mockito.verify(datastoreService).store(workspace, module, datastore,
                 new WorkspaceMetaData(Collections.emptySet()));
     }

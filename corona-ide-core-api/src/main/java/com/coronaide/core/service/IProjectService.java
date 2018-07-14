@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import com.coronaide.core.model.Project;
+import com.coronaide.core.model.ProjectDeleteRequest;
 import com.coronaide.core.model.ProjectRequest;
 
 /**
@@ -43,26 +44,15 @@ public interface IProjectService {
     Collection<Project> getAll();
 
     /**
-     * Removes a project from the current workspace, without deleting the project's contents
+     * Removes a project and optionally deletes it's contents from the file system
      *
-     * @param project
-     *            The project to remove from Corona IDE's context
-     * @since 0.1
-     */
-    void remove(Project project);
-
-    /**
-     * Removes a project and deletes it's contents from the file system
-     *
-     * <p>
-     * Equivalent to calling {@link #remove(Project)} and recursively deleting the project directory
-     *
-     * @param project
-     *            The project to remove from Corona IDE's context and delete
+     * @param request
+     *            A request containing the path of the project to delete and whether to also remove its contents from
+     *            disk
      * @throws IOException
      *             If there is an error performing the delete operation
-     * @since 0.1
+     * @since 0.1.0
      */
-    void delete(Project project) throws IOException;
+    void delete(ProjectDeleteRequest request) throws IOException;
 
 }
