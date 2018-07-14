@@ -74,3 +74,6 @@ typings/
 # Serverless directories
 .serverless
 /.gradle/
+/bin/
+.classpath
+.settings

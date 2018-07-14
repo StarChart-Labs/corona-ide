@@ -70,6 +70,9 @@ public class Main {
             logger.info("Running in workspace {} from {}", workspaceDirectory, applicationDirectory);
             // CoronaUIApplication.setSpringContext(context);
             // Application.launch(CoronaUIApplication.class);
+            
+            //Runtime runtime = Runtime.getRuntime();
+            
         }
     }
 
