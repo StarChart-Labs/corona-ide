@@ -10,10 +10,13 @@
  */
 package com.coronaide.main.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import com.coronaide.core.config.CoronaIdeCoreConfiguration;
+import com.coronaide.core.internal.service.ICoreConfiguration;
+import com.coronaide.main.ApplicationStartup;
 
 /**
  * Aggregation of the configuration classes required to run the Corona application
@@ -27,4 +30,9 @@ import com.coronaide.core.config.CoronaIdeCoreConfiguration;
 })
 public class CoronaIdeMainConfiguration {
 
+	@Bean
+	public ApplicationStartup applicationStartup(ICoreConfiguration coreConfiguration) {
+		return new ApplicationStartup(coreConfiguration);
+	}
+	
 }
