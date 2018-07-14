@@ -30,6 +30,7 @@ class ProjectTree extends Component {
     for(const project of this.state.projects) {
       projectsList.push(<ProjectTreeItem key={project.rootDirectory}
               name={project.name}
+              path={project.rootDirectory}
               selected={this.state.selectedPath === project.rootDirectory}
               onClick={() => this.projectListItemClick(project.rootDirectory)}/>);
     }

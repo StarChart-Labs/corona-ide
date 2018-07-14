@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.0",
     "@fortawesome/free-solid-svg-icons": "^5.1.0",
-    "@fortawesome/react-fontawesome": "^0.1.0"
+    "@fortawesome/react-fontawesome": "^0.1.0",
+    "react": "^16.4.1",
+    "react-contextmenu": "^2.9.2",
+    "react-dom": "^16.4.1",
+    "tslib": "^1.9.3"
   },
   "main": "electron-main.js",
   "proxy": "http://localhost:3030",
