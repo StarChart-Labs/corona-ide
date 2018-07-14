@@ -1,0 +1,17 @@
+apply plugin: 'com.moowork.node'
+
+node {
+    // Version of node to use.
+    version = '7.7.1'
+
+    // Version of npm to use.
+    npmVersion = '6.1.0'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+}
+
+task runUi(type: NpmTask) {
+  args = ['start']
+}

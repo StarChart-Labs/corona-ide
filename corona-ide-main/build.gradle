@@ -1,5 +1,3 @@
-apply plugin: 'com.moowork.node'
-
 task run (type: JavaExec){
     def applicationDirectory= file(project.properties['applicationDirectory'] ?: "${projectDir}").toString()
     def workspaceDirectory= file(project.properties['workspaceDirectory'] ?: "${projectDir}").toString()
@@ -21,22 +19,4 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-context'
     
     runtime group: 'org.slf4j', name: 'slf4j-simple'
-}
-
-node {
-    // Version of node to use.
-    version = '6.11.1'
-
-    // Version of npm to use.
-    npmVersion = '3.10.10'
-
-    // If true, it will download node using above parameters.
-    // If false, it will try to use globally installed node.
-    download = true
-    
-    nodeModulesDir = file("${rootDir}/corona-ide-ui")
-}
-
-task runUi(type: NpmTask) {
-  args = ['start']
 }
