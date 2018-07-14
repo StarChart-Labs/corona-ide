@@ -17,6 +17,12 @@ dependencies {
     compile group: 'javax.inject', name: 'javax.inject'
     compile group: 'org.slf4j', name: 'slf4j-api'
     compile group: 'org.springframework', name: 'spring-context'
+    compile (group: 'org.springframework.boot', name: 'spring-boot') {
+        exclude module : 'spring-boot-starter-logging'
+    }
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web') {
+        exclude module : 'spring-boot-starter-logging'
+    }
     
     runtime group: 'org.slf4j', name: 'slf4j-simple'
 }
