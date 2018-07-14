@@ -1,0 +1,10 @@
+.App {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+.editor-area {
+  color: #888;
+  font-size: 1.1rem;
+  margin: auto;
+}

@@ -1,18 +1,25 @@
 {
-  "name": "corona-ide-ui",
+  "name": "corona-ui",
   "version": "0.1.0",
-  "description": "The front-end process for the Corona IDE",
-  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.0",
+    "@fortawesome/free-solid-svg-icons": "^5.1.0",
+    "@fortawesome/react-fontawesome": "^0.1.0"
+  },
+  "main": "electron-main.js",
+  "proxy": "http://localhost:3030",
   "scripts": {
-    "start": "electron ."
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron": "electron ."
   },
-  "repository": {
-    "type": "git",
-    "url": ".."
-  },
-  "author": "nickavv",
-  "license": "EPL-1.0",
   "devDependencies": {
-    "electron": "^2.0.2"
+    "electron": "^2.0.5",
+    "react-scripts": "1.1.4"
   }
 }
