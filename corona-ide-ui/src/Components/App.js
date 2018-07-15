@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import ProjectTree from './ProjectTree/ProjectTree'
+import ProjectTree from './ProjectTree/ProjectTree';
+
+import '@starchart-labs/react-flightdeck/dist/styles/Modal.css';
 import '../Style/App.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';

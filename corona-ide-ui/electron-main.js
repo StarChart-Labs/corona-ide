@@ -13,7 +13,7 @@ function createMenuBar() {
         {
           label: 'About Corona',
           click() {
-              //
+              // TODO implement About dialog
           }
         },
         {
@@ -35,11 +35,23 @@ function createMenuBar() {
           label: 'New Project',
           accelerator: 'CmdOrCtrl+N',
           click() {
-              console.log('Oh, hi there!');
+              // TODO implement New Project dialog
           }
         }
       ]
     },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Open Dev Tools',
+          accelerator: 'CmdOrCtrl+Alt+I',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+          }
+        }
+      ]
+    }
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
