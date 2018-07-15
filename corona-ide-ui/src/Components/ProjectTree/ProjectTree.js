@@ -87,7 +87,7 @@ class ProjectTree extends Component {
 
   handleDeleteCheckboxChange(e) {
     this.setState({
-      deleteProjectFromDisk: e.checked
+      deleteProjectFromDisk: e.target.checked
     });
   }
 
@@ -111,7 +111,7 @@ class ProjectTree extends Component {
             <React.Fragment>
               <p>Are you sure you want to remove the project {this.state.projectToDelete.name} from the workspace?</p>
               <label>
-                <input type='checkbox' checked={this.state.deleteProjectFromDisk} name='deleteFromDisk' onChange={this.handleDeleteCheckboxChange} />
+                <input type='checkbox' checked={!!this.state.deleteProjectFromDisk} name='deleteFromDisk' onChange={this.handleDeleteCheckboxChange} />
                 Delete project from disk (This cannot be undone!)
               </label>
             </React.Fragment>
