@@ -59,8 +59,8 @@ public class ProjectRestServer {
 
     @RequestMapping(value = "/projects/{projectId}", method = RequestMethod.DELETE)
     public void deleteProject(@PathVariable("projectId") UUID projectId,
-            @RequestParam(value = "q", defaultValue = "false") Boolean deleteOnDisk) throws IOException {
-        projectService.delete(projectId, deleteOnDisk);
+            @RequestParam(value = "deleteFromDisk", defaultValue = "false") Boolean deleteFromDisk) throws IOException {
+        projectService.delete(projectId, deleteFromDisk);
     }
 
 }
