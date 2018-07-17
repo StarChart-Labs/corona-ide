@@ -12,6 +12,7 @@ package com.coronaide.test.core.model;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -21,7 +22,8 @@ import com.coronaide.core.model.WorkspaceMetaData;
 
 public class WorkspaceMetaDataTest {
 
-    private static final Set<ProjectLocation> LOCATIONS = Collections.singleton(new ProjectLocation("root"));
+    private static final Set<ProjectLocation> LOCATIONS = Collections
+            .singleton(new ProjectLocation(UUID.randomUUID(), "root"));
 
     @Test(expectedExceptions = NullPointerException.class)
     public void createNullLocations() throws Exception {
@@ -71,7 +73,7 @@ public class WorkspaceMetaDataTest {
 
     @Test
     public void equalsDifferentData() throws Exception {
-        Set<ProjectLocation> locations2 = Collections.singleton(new ProjectLocation("root2"));
+        Set<ProjectLocation> locations2 = Collections.singleton(new ProjectLocation(UUID.randomUUID(), "root2"));
         WorkspaceMetaData result1 = new WorkspaceMetaData(LOCATIONS);
         WorkspaceMetaData result2 = new WorkspaceMetaData(locations2);
 

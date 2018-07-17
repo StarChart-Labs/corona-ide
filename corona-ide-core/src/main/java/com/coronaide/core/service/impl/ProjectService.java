@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.coronaide.core.datastore.Datastore;
@@ -86,7 +87,7 @@ public class ProjectService implements IProjectService {
             throw new IOException("Error creating project directory");
         }
 
-        ProjectLocation projectLocation = new ProjectLocation(request.getRootDirectory().toString());
+        ProjectLocation projectLocation = new ProjectLocation(UUID.randomUUID(), request.getRootDirectory().toString());
         Set<ProjectLocation> locations = workspaceData.map(WorkspaceMetaData::getProjectLocations)
                 .orElse(new HashSet<>());
         locations.add(projectLocation);
@@ -111,6 +112,35 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
+    public void delete(UUID id, boolean deleteFromDisk) throws IOException {
+        Objects.requireNonNull(id);
+
+        Workspace workspace = workspaceService.getActiveWorkspace();
+        Module module = CoronaIdeCore.getModule();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
+
+        Optional<WorkspaceMetaData> workspaceData = datastoreService.load(workspace, module, datastore);
+
+        Project project = workspaceData.map(WorkspaceMetaData::getProjectLocations)
+                .orElse(Collections.emptySet()).stream()
+                .filter(p -> Objects.equals(p.getId(), id))
+                .findFirst()
+                .map(this::toProject)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        removeFromWorkspace(workspace, project);
+
+        if (deleteFromDisk) {
+            // Delete the directory containing the project
+            Files.walk(project.getRootDirectory())
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .peek(System.out::println)
+            .forEach(File::delete);
+        }
+    }
+
+    @Override
     public void delete(ProjectDeleteRequest request) throws IOException {
         Objects.requireNonNull(request);
 
@@ -132,10 +162,10 @@ public class ProjectService implements IProjectService {
         if (request.getDeleteFromDisk() == true) {
             // Delete the directory containing the project
             Files.walk(project.getRootDirectory())
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(System.out::println)
-                    .forEach(File::delete);
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .peek(System.out::println)
+            .forEach(File::delete);
         }
     }
 
@@ -201,7 +231,7 @@ public class ProjectService implements IProjectService {
         String name = location.getFileName().toString();
         Path workingDirectory = Datastores.getMetaDataDirectory(location);
 
-        return new Project(name, location, workingDirectory);
+        return new Project(projectLocation.getId(), name, location, workingDirectory);
     }
 
 }

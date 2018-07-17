@@ -11,6 +11,7 @@
 package com.coronaide.core.model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -23,25 +24,38 @@ import javax.annotation.concurrent.Immutable;
  * Clients are not intended to interact with this class directly
  *
  * @author romeara
- * @since 0.1
+ * @since 0.1.0
  */
 @Immutable
 public class ProjectLocation {
 
+    private final UUID id;
+
     private final String rootDirectory;
 
     /**
+     * @param id
+     *            Unique identifier for a project in the context of the application
      * @param rootDirectory
      *            The directory which is the root of all files which are considered part of the project
-     * @since 0.1
+     * @since 0.1.0
      */
-    public ProjectLocation(String rootDirectory) {
+    public ProjectLocation(UUID id, String rootDirectory) {
+        this.id = Objects.requireNonNull(id);
         this.rootDirectory = Objects.requireNonNull(rootDirectory);
     }
 
     /**
+     * @return Unique identifier for a project in the context of the application
+     * @since 0.1.0
+     */
+    public UUID getId() {
+        return id;
+    }
+
+    /**
      * @return The directory which is the root of all files which are considered part of the project
-     * @since 0.1
+     * @since 0.1.0
      */
     public String getRootDirectory() {
         return rootDirectory;
@@ -49,7 +63,8 @@ public class ProjectLocation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRootDirectory());
+        return Objects.hash(getId(),
+                getRootDirectory());
     }
 
     @Override
@@ -59,7 +74,8 @@ public class ProjectLocation {
         if (obj instanceof ProjectLocation) {
             ProjectLocation compare = (ProjectLocation) obj;
 
-            result = Objects.equals(compare.getRootDirectory(), getRootDirectory());
+            result = Objects.equals(compare.getId(), getId())
+                    && Objects.equals(compare.getRootDirectory(), getRootDirectory());
         }
 
         return result;
@@ -68,6 +84,7 @@ public class ProjectLocation {
     @Override
     public String toString() {
         return new StringBuilder().append(getClass().getSimpleName()).append('{')
+                .append("id").append('=').append(getId())
                 .append("rootDirectory").append('=').append(getRootDirectory())
                 .append('}').toString();
     }

@@ -24,12 +24,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author nickavv
  * @since 0.1.0
+ * @deprecated Only used by legacy APIs as of 0.1.0
  */
+@Deprecated
 @Immutable
 public final class ProjectDeleteRequest {
 
     private final Path rootDirectory;
-    
+
     private final boolean deleteFromDisk;
 
     /**

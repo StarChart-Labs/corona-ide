@@ -12,6 +12,7 @@ package com.coronaide.core.service;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import com.coronaide.core.model.Project;
 import com.coronaide.core.model.ProjectDeleteRequest;
@@ -23,6 +24,7 @@ import com.coronaide.core.model.ProjectRequest;
  * @author romeara
  * @since 0.1
  */
+@SuppressWarnings("deprecation")
 public interface IProjectService {
 
     /**
@@ -46,13 +48,28 @@ public interface IProjectService {
     /**
      * Removes a project and optionally deletes it's contents from the file system
      *
+     * @param id
+     *            The unique identifier of the project to delete
+     * @param deleteFromDisk
+     *            Whether to also delete the file contents from disk
+     * @throws IOException
+     *             If there is an error performing the delete operation
+     * @since 0.1.0
+     */
+    void delete(UUID id, boolean deleteFromDisk) throws IOException;
+
+    /**
+     * Removes a project and optionally deletes it's contents from the file system
+     *
      * @param request
      *            A request containing the path of the project to delete and whether to also remove its contents from
      *            disk
      * @throws IOException
      *             If there is an error performing the delete operation
      * @since 0.1.0
+     * @deprecated Use {@link #delete(UUID, boolean)} instead
      */
+    @Deprecated
     void delete(ProjectDeleteRequest request) throws IOException;
 
 }

@@ -12,6 +12,7 @@ package com.coronaide.core.model;
 
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -27,10 +28,12 @@ import com.coronaide.core.service.IProjectService;
  * instance
  *
  * @author romeara
- * @since 0.1
+ * @since 0.1.0
  */
 @Immutable
 public final class Project {
+
+    private final UUID id;
 
     private final String name;
 
@@ -39,23 +42,34 @@ public final class Project {
     private final Path workingDirectory;
 
     /**
+     * @param id
+     *            Unique identifier for a project in the context of the application
      * @param name
      *            A simple label identifying the project and describing its purpose
      * @param rootDirectory
      *            The directory which is the root of all files which are considered part of the project
      * @param workingDirectory
      *            Directory all application generated/managed files for the project should be placed within
-     * @since 0.1
+     * @since 0.1.0
      */
-    public Project(String name, Path rootDirectory, Path workingDirectory) {
+    public Project(UUID id, String name, Path rootDirectory, Path workingDirectory) {
+        this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
         this.rootDirectory = Objects.requireNonNull(rootDirectory);
         this.workingDirectory = Objects.requireNonNull(workingDirectory);
     }
 
     /**
+     * @return Unique identifier for a project in the context of the application
+     * @since 0.1.0
+     */
+    public UUID getId() {
+        return id;
+    }
+
+    /**
      * @return A simple label identifying the project and describing its purpose
-     * @since 0.1
+     * @since 0.1.0
      */
     public String getName() {
         return name;
@@ -63,7 +77,7 @@ public final class Project {
 
     /**
      * @return The directory which is the root of all files which are considered part of the project
-     * @since 0.1
+     * @since 0.1.0
      */
     public Path getRootDirectory() {
         return rootDirectory;
@@ -71,7 +85,7 @@ public final class Project {
 
     /**
      * @return Directory all application generated/managed files for the project should be placed within
-     * @since 0.1
+     * @since 0.1.0
      */
     public Path getWorkingDirectory() {
         return workingDirectory;
@@ -79,7 +93,8 @@ public final class Project {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(),
+        return Objects.hash(getId(),
+                getName(),
                 getRootDirectory(),
                 getWorkingDirectory());
     }
@@ -91,7 +106,8 @@ public final class Project {
         if (obj instanceof Project) {
             Project compare = (Project) obj;
 
-            result = Objects.equals(compare.getName(), getName())
+            result = Objects.equals(compare.getId(), getId())
+                    && Objects.equals(compare.getName(), getName())
                     && Objects.equals(compare.getRootDirectory(), getRootDirectory())
                     && Objects.equals(compare.getWorkingDirectory(), getWorkingDirectory());
         }
@@ -102,6 +118,7 @@ public final class Project {
     @Override
     public String toString() {
         return new StringBuilder().append(getClass().getSimpleName()).append('{')
+                .append("id").append('=').append(getId())
                 .append("name").append('=').append(getName())
                 .append("rootDirectory").append('=').append(getRootDirectory())
                 .append("workingDirectory").append('=').append(getWorkingDirectory())

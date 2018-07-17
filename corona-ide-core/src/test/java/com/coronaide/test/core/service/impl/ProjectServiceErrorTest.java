@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -90,7 +91,7 @@ public class ProjectServiceErrorTest {
         Module module = CoronaIdeCore.getModule();
         Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
         WorkspaceMetaData existingData = new WorkspaceMetaData(
-                Collections.singleton(new ProjectLocation(projectRoot.toString())));
+                Collections.singleton(new ProjectLocation(UUID.randomUUID(), projectRoot.toString())));
 
         Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
         Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
@@ -110,6 +111,24 @@ public class ProjectServiceErrorTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void removeDoesntExist() throws Exception {
+        Workspace workspace = new Workspace(Paths.get("workspace"));
+        Module module = CoronaIdeCore.getModule();
+        Datastore<WorkspaceMetaData> datastore = CoreDatastores.getWorkspaceDatastore();
+        WorkspaceMetaData existingData = new WorkspaceMetaData(Collections.emptySet());
+
+        Mockito.when(workspaceService.getActiveWorkspace()).thenReturn(workspace);
+        Mockito.when(datastoreService.load(workspace, module, datastore)).thenReturn(Optional.of(existingData));
+
+        try {
+            projectService.delete(UUID.randomUUID(), false);
+        } finally {
+            Mockito.verify(workspaceService).getActiveWorkspace();
+            Mockito.verify(datastoreService).load(workspace, module, datastore);
+        }
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void removeRequestDoesntExist() throws Exception {
         Path projectRoot = Paths.get("root");
 
         Workspace workspace = new Workspace(Paths.get("workspace"));
