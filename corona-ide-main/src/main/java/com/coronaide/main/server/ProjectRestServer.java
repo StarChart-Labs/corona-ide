@@ -49,7 +49,11 @@ public class ProjectRestServer {
     }
 
     /**
+     * @param request
+     *            Specification of the project to delete
      * @deprecated Use {@link #deleteProject(UUID, Boolean)} instead
+     * @throws IOException
+     *             If there is an error deleting the project
      */
     @Deprecated
     @RequestMapping(value = "/projects", method = RequestMethod.DELETE)
