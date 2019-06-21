@@ -3,38 +3,28 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath group: 'com.moowork.gradle', name: 'gradle-node-plugin', version: '1.2.0'
-        classpath group: 'com.netflix.nebula', name: 'nebula-dependency-recommender', version: '5.1.0'
-        classpath group: 'org.starchartlabs.flare', name: 'flare-operations-plugins', version: '1.1.0'
-        classpath group: 'org.starchartlabs.flare', name: 'flare-publishing-plugins', version: '0.3.0'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+        classpath 'com.netflix.nebula:nebula-dependency-recommender:5.1.0'
+        classpath 'org.starchartlabs.flare:flare-operations-plugins:2.0.0'
+        classpath 'org.starchartlabs.flare:flare-publishing-plugins:0.3.0'
     }
 }
 
 apply plugin: 'org.starchartlabs.flare.merge-coverage-reports'
 
-mergeCoverageReports {
-    reports {
-        xml.enabled true
-        html.enabled false
-        csv.enabled false
-        
-        xml.destination = "${buildDir}/reports/jacoco/report.xml"
-    }
-}
-
 allprojects{
     apply plugin: 'eclipse'
     apply plugin: 'nebula.dependency-recommender'
-    apply plugin: 'org.starchartlabs.flare.dependency-insight'
+    apply plugin: 'org.starchartlabs.flare.dependency-reporting'
 
     dependencyRecommendations {
         propertiesFile file: file("${rootDir}/dependencies.properties")
     }
 
-    //Default all projects to a synchronized IDE version number. Certain projects, such as the API project, will override this value
+    // Default all projects to a synchronized IDE version number. Certain projects, such as the API project, will override this value
     version = "${coronaIdeVersion}"
 
-    //Always download sources, to allow debugging, and use Eclipse containers for greater portability
+    // Always download sources, to allow debugging, and use Eclipse containers for greater portability
     eclipse {
         classpath {
             downloadSources=true
@@ -54,7 +44,7 @@ subprojects{
     apply plugin: 'org.starchartlabs.flare.increase-test-logging'
     apply plugin: 'org.starchartlabs.flare.source-jars'
     
-    //Configure test support sources, which can be re-used by importing projects
+    // Configure test support sources, which can be re-used by importing projects
     configurations {
         testSupport
     }
@@ -93,7 +83,7 @@ subprojects{
         testSupport testSupportJar
     }
 
-    //Setup default test behavior, including failure logging
+    // Setup default test behavior, including failure logging
     test {
         useTestNG() {
             useDefaultListeners = true
